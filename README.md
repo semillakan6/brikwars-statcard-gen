@@ -10,4 +10,4 @@ The fonts in the `css/fonts/` folder are all licensed under the <a href="http://
 
 The original code is ©2015-2018 Tobias Zwick, licensed under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.
 
-This code is ©2023 Ruben Eduardo Cuevas Moreno, is also licensed under the <<a href="https://opensource.org/licenses/MIT">MIT license</a>.
+This code is ©2023 Ruben Eduardo Cuevas Moreno, is also licensed under the <a href="https://opensource.org/licenses/MIT">MIT license</a>.
