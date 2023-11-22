@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "filepond": "^4.30.4",
+    "jquery-filepond": "^1.0.0"
+  }
+}
