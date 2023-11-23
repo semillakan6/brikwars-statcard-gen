@@ -11,92 +11,111 @@ class Statcard {
 
 		this.specialitiesInfo = null;
 
-		this.titleImage = new TitleImage(document.getElementById('statcard_front'),
-			document.getElementById('statcard_title_image'),
-			this.layout.titleImageRect);
-		this.titleImage.moc = moc;
-		this.titleImage.setDefaultPicture = function () {
-			if (moc.mind.active) {
-				this.image.src = "images/creature.png";
+		const createTitleImage = (elementId1, elementId2, layoutRect, imageUrl1, imageUrl2, moc = null) => {
+			let titleImage = new TitleImage(document.getElementById(elementId1),
+				document.getElementById(elementId2),
+				layoutRect);
+			if (moc) {
+				titleImage.moc = moc;
+				titleImage.setDefaultPicture = function () {
+					this.image.src = moc.mind.active ? imageUrl1 : imageUrl2;
+				};
 			}
+			titleImage.init();
+			return titleImage;
+		}
 
-			else {
-				this.image.src = "images/vehicle.png";
-			}
-		};
-		this.titleImage.init();
+		this.titleImage = createTitleImage(
+			'statcard_front',
+			'statcard_title_image',
+			this.layout.titleImageRect,
+			"images/creature.png",
+			"images/vehicle.png",
+			moc
+		);
 
-		this.watermarkImage = new TitleImage(document.getElementById('statcard_back'),
-			document.getElementById('statcard_watermark_image'),
-			this.layout.watermarkImageRect);
-		this.watermarkImage.init();
+		this.watermarkImage = createTitleImage(
+			'statcard_back',
+			'statcard_watermark_image',
+			this.layout.watermarkImageRect
+		);
 
 		this.init = function () {
 			this.drawBackground();
-
-			var proxy = this;
-			this.fontLoader.load(function () { proxy.drawForeground(); });
+			this.fontLoader.load(() => this.drawForeground());
 		};
 
-		this.drawImage = function (ctx, img_src, html_color) {
-			var img = new Image();
-			var dimensions = this.layout.dimensions;
-			var cardname = this.layout.name;
-			if (html_color) {
-				img.onload = function () {
-					var colored_img = colorizeImage(img, parseColor(html_color));
-					ctx.drawImage(colored_img, 0, 0);
-				};
-			}
+		const createContext = (id) => document.getElementById(id)?.getContext("2d");
 
-			else {
-				img.onload = function () { ctx.drawImage(img, 0, 0); };
-			}
-			img.src = "images/" + this.layout.name + "/" + img_src;
+		this.drawImage = (ctx, imgSrc, htmlColor) => {
+			const img = new Image();
+
+			const drawImageCallback = htmlColor
+				? () => ctx.drawImage(colorizeImage(img, parseColor(htmlColor)), 0, 0)
+				: () => ctx.drawImage(img, 0, 0);
+
+			img.onload = drawImageCallback;
+			img.src = `images/${this.layout?.name}/${imgSrc}`;
 		};
 
-		this.drawStaticBackground = function () {
-			var ctx = document.getElementById("statcard_watermark_background").getContext("2d");
+		this.drawStaticBackground = () => {
+			const ctx = createContext("statcard_watermark_background");
 			ctx.fillStyle = "#fffbf2";
 			ctx.fillRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
 
-			this.drawImage(document.getElementById("statcard_front_background").getContext("2d"), "card_front.png");
-			this.drawImage(document.getElementById("statcard_back_background").getContext("2d"), "card_back.png");
+			this.drawImage(createContext("statcard_front_background"), "card_front.png");
+			this.drawImage(createContext("statcard_back_background"), "card_back.png");
 		};
 
-		this.drawStaticForeground = function () {
-			this.drawImage(document.getElementById("statcard_front_frame").getContext("2d"), "frame.png");
-			this.drawImage(document.getElementById("statcard_back_frame").getContext("2d"), "frame.png");
+		this.drawStaticForeground = () => {
+			this.drawImage(createContext("statcard_front_frame"), "frame.png");
+			this.drawImage(createContext("statcard_back_frame"), "frame.png");
 		};
 
-		this.drawColoredArea1 = function () {
-			var fctx = document.getElementById("statcard_front_color_area1").getContext("2d");
-			var bctx = document.getElementById("statcard_back_color_area1").getContext("2d");
+		this.drawColoredArea1 = () => {
+			const clearAndDrawImage = (id, imageFile, color) => {
+				const ctx = createContext(id);
+				ctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
+				this.drawImage(ctx, imageFile, color);
+			};
 
-			fctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
-			bctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
-			this.drawImage(fctx, "card_color1_front.png", moc.color1);
-			this.drawImage(bctx, "card_color1_back.png", moc.color1);
+			clearAndDrawImage("statcard_front_color_area1", "card_color1_front.png", moc.color1);
+			clearAndDrawImage("statcard_back_color_area1", "card_color1_back.png", moc.color1);
 		};
 
-		this.drawColoredArea2 = function () {
-			var ctx = document.getElementById("statcard_front_color_area2").getContext("2d");
+		const clearCanvas = (ctx, layout) => ctx.clearRect(0, 0, layout.dimensions.wdt, layout.dimensions.hgt);
 
-			ctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
-			this.drawImage(document.getElementById("statcard_front_color_area2").getContext("2d"), "card_color2_front.png", moc.color2);
+		const drawTitleText = (ctx, { size, font, text, x, y, maxWdt }) => {
+			ctx.font = `bold ${size}pt ${font}`;
+			ctx.fillStyle = 'white';
+			ctx.textBaseline = 'top';
+			ctx.shadowColor = 'black';
+			ctx.shadowBlur = 5;
+			ctx.lineWidth = size / 30;
+			ctx.fillText(text, x, y, maxWdt);
+			ctx.shadowBlur = 0;
+			ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+			ctx.strokeText(text, x, y, maxWdt);
 		};
 
-		this.drawColoredArea3 = function () {
-			var fctx = document.getElementById("statcard_front_color_area3").getContext("2d");
-			var bctx = document.getElementById("statcard_back_color_area3").getContext("2d");
-
-			fctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
-			bctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
-			this.drawImage(document.getElementById("statcard_front_color_area3").getContext("2d"), "brick_front_new.png", moc.color3);
-			this.drawImage(document.getElementById("statcard_back_color_area3").getContext("2d"), "", moc.color3);
+		this.drawColoredArea2 = () => {
+			const ctx = createContext("statcard_front_color_area2");
+			clearCanvas(ctx, this.layout);
+			this.drawImage(ctx, "card_color2_front.png", moc.color2);
 		};
 
-		this.drawBackground = function () {
+		this.drawColoredArea3 = () => {
+			const clearAndDrawImage = (canvasId, imageName, color) => {
+				const ctx = createContext(canvasId);
+				clearCanvas(ctx, this.layout);
+				this.drawImage(ctx, imageName, color);
+			};
+
+			clearAndDrawImage("statcard_front_color_area3", "brick_front_new.png", moc.color3);
+			clearAndDrawImage("statcard_back_color_area3", "", moc.color3);
+		};
+
+		this.drawBackground = () => {
 			this.titleImage.draw();
 			this.watermarkImage.draw();
 			this.drawStaticBackground();
@@ -106,69 +125,49 @@ class Statcard {
 			this.drawColoredArea3();
 		};
 
-		this.drawWhiteTitleText = function (ctx, text, size, x, y, maxwdt, font) {
-			ctx.font = "bold " + size + "pt " + font;
-			ctx.fillStyle = "white";
-			ctx.textBaseline = "top";
-			ctx.shadowColor = "black";
-			ctx.shadowBlur = 5;
-			ctx.fillText(text, x, y, maxwdt);
-			ctx.shadowBlur = 0;
-			ctx.strokeStyle = "rgba(0,0,0,0.5)";
-			ctx.lineWidth = size / 30;
-			ctx.strokeText(text, x, y, maxwdt);
+		this.drawWhiteTitleText = (ctx, text, size, x, y, maxWdt, font) =>
+			drawTitleText(ctx, { size, font, text, x, y, maxWdt });
+
+		const clearCanvasAndReturnCtx = (id) => {
+			const ctx = createContext(id);
+			clearCanvas(ctx, this.layout);
+			return ctx;
 		};
 
+		const drawTextProperties = (ctx, align, titleText, size, x, y, wdt, font) => {
+			ctx.textAlign = align;
+			this.drawWhiteTitleText(ctx, titleText, size, x, y, wdt, font);
+		}
 
-		this.drawForegroundFront = function () {
-			var ctx = document.getElementById("statcard_front_foreground").getContext("2d");
-			ctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
+		this.drawForegroundFront = () => {
+			const ctx = clearCanvasAndReturnCtx("statcard_front_foreground");
+			const p = this.layout.front;
 
-			var p = this.layout.front;
+			drawTextProperties(ctx, "left", moc.name, p.title.size, p.title.x, p.title.y, p.title.wdt, this.layout.serif);
+			drawTextProperties(ctx, "center", moc.cost + 'ü', p.cost.size, p.cost.x, p.cost.y, p.cost.wdt, this.layout.serif);
+			drawTextProperties(ctx, "center", "", p.costTitle.size, p.costTitle.x, p.costTitle.y, p.costTitle.wdt, this.layout.sansSerif);
 
-			// Title
-			ctx.textAlign = "left";
-			this.drawWhiteTitleText(ctx, moc.name, p.title.size, p.title.x, p.title.y, p.title.wdt, this.layout.serif);
-
-			// Cost
-			ctx.textAlign = "center";
-			this.drawWhiteTitleText(ctx, moc.cost + 'ü', p.cost.size, p.cost.x, p.cost.y, p.cost.wdt, this.layout.serif);
-
-			// Cost Title
-			ctx.textAlign = "center";
-			this.drawWhiteTitleText(ctx, "", p.costTitle.size, p.costTitle.x, p.costTitle.y, p.costTitle.wdt, this.layout.sansSerif);
-
-			// Main Attributes:
 			this.attributesArea.draw(ctx);
-
-			// Specialities
 			this.drawSpecialities(ctx);
 		};
 
-		this.drawForegroundBack = function () {
-			var ctx = document.getElementById("statcard_back_foreground").getContext("2d");
-			ctx.clearRect(0, 0, this.layout.dimensions.wdt, this.layout.dimensions.hgt);
+		this.drawForegroundBack = () => {
+			const ctx = clearCanvasAndReturnCtx("statcard_back_foreground");
+			const p = this.layout.back;
 
-			var p = this.layout.back;
+			drawTextProperties(ctx, "center", moc.cost, p.cost.size, '', p.cost.y, p.cost.wdt, this.layout.serif);
 
-			// Cost (backside)
-			ctx.textAlign = "center";
-			this.drawWhiteTitleText(ctx, moc.cost, p.cost.size, '', p.cost.y, p.cost.wdt, this.layout.serif);
-
-			// Title (backside)
 			ctx.shadowBlur = 0;
-			ctx.font = "bold " + p.title.size + "pt " + this.layout.sansSerif;
+			ctx.font = `bold ${p.title.size}pt ${this.layout.sansSerif}`;
 			ctx.textBaseline = "bottom";
 			ctx.textAlign = "left";
 			ctx.fillStyle = "black";
-			ctx.shadowBlur = 0;
 			ctx.fillText(moc.name, p.title.x, p.title.y, p.title.wdt);
 
-			// other side
 			this.backsideArea.draw(ctx);
 		};
 
-		this.drawForeground = function () {
+		this.drawForeground = () => {
 			if (!this.fontLoader.finished()) return;
 
 			this.specialitiesInfo = this.buildSpecialitiesInfo();
@@ -178,99 +177,58 @@ class Statcard {
 		};
 
 		this.buildSpecialitiesInfo = function () {
-			var result = [];
-
-			for (var i = 0; i < moc.specialities.stuff.length; ++i) {
-				var speciality = moc.specialities.stuff[i];
-				if (!speciality) continue;
-
-				var sp = {};
-				sp.title = sp.name = speciality.name;
-				sp.description = speciality.description;
-
-				result.push(sp);
-			}
-
-			// the most important speciality is to note supernaturality
+			const specialitiesInfo = moc.specialities.stuff
+				.filter(item => item)
+				.map(item => ({ title: item.name, name: item.name, description: item.description }));
+			  
 			if (moc.superNatural.active) {
-				var superNaturalDice = moc.superNatural.getDieTypes();
+				const superNaturalDice = moc.superNatural.getDieTypes();
+				
 				if (superNaturalDice.length > 0) {
-					var sn = {};
-					sn.title = sn.name = "SuperNatural";
-
-					if (superNaturalDice.length == 1) {
-						var die = superNaturalDice[0];
-						sn.title += " (" + die.amount + die.die() + " " + die.name() + ")";
-					}
-
-					else {
-						sn.title += " (" + moc.superNatural.getDiceCount() + " dice)";
-					}
-
-					sn.description =
-						"Allows this unit to roll ";
-
-					for (var i = 0; i < superNaturalDice.length; ++i) {
-						var die = superNaturalDice[i];
-						var comma = i == 0 ? "" : (i + 1 == superNaturalDice.length ? " and " : ", ");
-						sn.description += comma + die.amount + die.die() + " " + die.name();
-					}
-					sn.description += " to produce SuperNatural effects appropriate to it's Cliché each turn.";
-
-					result.push(sn);
+					const titleExtension = superNaturalDice.length == 1 
+						? ` (${superNaturalDice[0].amount}${superNaturalDice[0].die()} ${superNaturalDice[0].name()})` 
+						: ` (${moc.superNatural.getDiceCount()} dice)`;
+		
+					const description = formatSuperNaturalDiceDescription(superNaturalDice);
+		
+					const superNaturalSpeciality = {
+						title: `SuperNatural${titleExtension}`,
+						name: 'SuperNatural',
+						description
+					};
+		
+					specialitiesInfo.push(superNaturalSpeciality);
 				}
 			}
-
+		
 			if (moc.mind.active) {
-				// extra action is also quite important
 				if (moc.mind.extraMinds > 0) {
-					var mt = { title: "", };
-
-					mt.name = "Extra Mind";
-
-					if (moc.mind.extraMinds > 1) {
-						mt.name += "s";
-						mt.title += moc.mind.extraMinds + "x ";
-					}
-					mt.title += "Extra Mind";
-
-					mt.description =
-						"This unit can take a total of " + moc.mind.extraMinds +
-						" extra Action(s) against any target per turn. The same" +
-						" weapon, hand, or equipment item still cannot be used" +
-						" for more than one Action in one turn.";
-
-					result.push(mt);
+					const extraMindsSpeciality = buildExtraMindsSpeciality(moc.mind.extraMinds);
+					specialitiesInfo.push(extraMindsSpeciality);
 				}
-
+		
 				if (moc.mind.isHalfMind) {
-					var hm = {};
-
-					hm.name = halfmind_types[moc.mind.halfmindTypeId].name;
-					hm.description = halfmind_types[moc.mind.halfmindTypeId].help;
-
-					if (halfmind_types[moc.mind.halfmindTypeId].isProgram)
-						if (moc.mind.program && moc.mind.program.length > 0) {
-							hm.ttDescription = moc.mind.program;
-							hm.description = "";
-						}
-
-
-					result.push(hm);
+					const halfmindSpeciality = buildHalfmindSpeciality(moc.mind);
+					specialitiesInfo.push(halfmindSpeciality);
 				}
-
+		
 				if (mind_types[moc.mind.mindTypeId].isIncompetent) {
-					var ic = {};
-
-					ic.name = mind_types[moc.mind.mindTypeId].name;
-					ic.description = "Stupid. If the player controls more than one stupid unit, then at the beginning of their turn, one Enemy of the player's choice may choose any one of the stupid units and control it as if it were his own for that turn.";
-
-					result.push(ic);
+					const incompetentSpeciality = buildIncompetentSpeciality(moc.mind);
+					specialitiesInfo.push(incompetentSpeciality);
 				}
 			}
-
-			return result;
+		
+			return specialitiesInfo;
 		};
+		
+		function formatSuperNaturalDiceDescription(superNaturalDice) {
+			const description = superNaturalDice.reduce((acc, die, i, arr) => {
+				const comma = i == 0 ? "" : (i + 1 == arr.length ? " and " : ", ");
+				return acc += `${comma}${die.amount}${die.die()} ${die.name()}`;
+			}, "Allows this unit to roll ");
+		
+			return description + " to produce SuperNatural effects appropriate to its Cliché each turn.";
+		}
 
 		this.drawSpecialities = function (ctx) {
 			var p = this.layout.front.specialities;
@@ -389,91 +347,70 @@ class Statcard {
 	}
 }
 
-function parseHexChar(hexchar) {
-	var num = parseInt(hexchar);
-	if (isNaN(num)) {
-		switch (hexchar) {
-			case "a": num = 10; break;
-			case "b": num = 11; break;
-			case "c": num = 12; break;
-			case "d": num = 13; break;
-			case "e": num = 14; break;
-			case "f": num = 15; break;
-			default: return NaN;
-		}
-	}
-	return num;
+function parseHexChar(hexChar) {
+	return parseInt(hexChar, 16);
 }
 
 function parseColor(color) {
-	color = color.substr(1);
-	color = color.toLowerCase();
-	color = color.substr(0, 6);
+	const hexChars = color.substr(1).toLowerCase().split('');
 
-	var rgb = 0;
-	for (var i = 0; i < color.length; i++) {
-		var num = parseHexChar(color[i]);
-		rgb += num << ((color.length - 1 - i) * 4);
+	let rgb = 0;
+	for (let i = 0; i < hexChars.length; i++) {
+		const num = parseHexChar(hexChars[i]);
+		rgb += num << ((hexChars.length - 1 - i) * 4);
 	}
 
-	var b = rgb & 255;
-	var g = (rgb >> 8) & 255;
-	var r = (rgb >> 16) & 255;
+	const b = rgb & 255;
+	const g = (rgb >> 8) & 255;
+	const r = (rgb >> 16) & 255;
 
 	return { r: r, g: g, b: b };
 }
 
-function rgb2hsl(color) {
-	var r = color.r / 255;
-	var g = color.g / 255;
-	var b = color.b / 255;
+function rgb2hsl({ r, g, b }) {
+	r /= 255;
+	g /= 255;
+	b /= 255;
 
-	var maxColor = Math.max(r, g, b);
-	var minColor = Math.min(r, g, b);
+	const maxColor = Math.max(r, g, b);
+	const minColor = Math.min(r, g, b);
 
-	var chroma = maxColor - minColor;
-	var l = (maxColor + minColor) / 2;
-	var s = 0, h = 0;
-	if (chroma != 0) {
-		if (maxColor == r) {
-			// because in javascript -8 mod 6 is -2 and not 4 which would be arithmetically correct
-			x = (g - b) / chroma;
-			while (x < 0) x += 6;
-			h = x % 6;
+	let chroma = maxColor - minColor;
+	let l = (maxColor + minColor) / 2;
+	let s = 0, h = 0;
+	if (chroma !== 0) {
+		if (maxColor === r) {
+			h = ((g - b) / chroma + 6) % 6;
+		} else if (maxColor === g) {
+			h = (b - r) / chroma + 2;
+		} else {
+			h = (r - g) / chroma + 4;
 		}
-		else if (maxColor == g) h = ((b - r) / chroma) + 2;
-		else if (maxColor == b) h = ((r - g) / chroma) + 4;
-		h *= 60;
 
+		h *= 60;
 		s = chroma / (1 - Math.abs(2 * l - 1));
 	}
 
-	return { h: h, s: s, l: l };
+	return { h, s, l };
 }
 
-function hsl2rgb(color) {
-	var h = color.h;
-	var s = color.s;
-	var l = color.l;
-
-	var c = (1 - Math.abs(2 * l - 1)) * s;
+function hsl2rgb({ h, s, l }) {
+	let c = (1 - Math.abs(2 * l - 1)) * s;
 	h /= 60;
-	var x = c * (1 - Math.abs(h % 2 - 1));
+	let x = c * (1 - Math.abs(h % 2 - 1));
 
-	var r = 0, g = 0, b = 0;
-	if (h < 1) { r = c, g = x, b = 0; }
-	else if (h < 2) { r = x, g = c, b = 0; }
-	else if (h < 3) { r = 0, g = c, b = x; }
-	else if (h < 4) { r = 0, g = x, b = c; }
-	else if (h < 5) { r = x, g = 0, b = c; }
-	else if (h < 6) { r = c, g = 0, b = x; }
+	let [r, g, b] = h < 1 ? [c, x, 0] :
+		h < 2 ? [x, c, 0] :
+			h < 3 ? [0, c, x] :
+				h < 4 ? [0, x, c] :
+					h < 5 ? [x, 0, c] : [c, 0, x];
 
-	var m = l - c / 2;
+	let m = l - c / 2;
 	r += m;
 	g += m;
 	b += m;
 
-	return { r: r * 255, g: g * 255, b: b * 255 }
+	return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) }
 }
 
 function colorizeImage(img, color) {
