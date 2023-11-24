@@ -232,117 +232,116 @@ class Statcard {
 		//Optimized up to here
 
 		this.drawSpecialities = function (ctx) {
-			var p = this.layout.front.specialities;
-
+			const { title, text, more } = this.layout.front.specialities;
+			const specialities = this.specialitiesInfo.filter(item => item.title);
+			const specialCount = Math.min(specialities.length, text.max);
+		
 			ctx.textBaseline = "top";
 			ctx.fillStyle = "#84634b";
 			ctx.textAlign = "left";
 			ctx.shadowBlur = 0;
-
-			ctx.font = p.title.size + "pt " + this.layout.serif;
-			ctx.fillText("SPECIALITIES", p.title.x, p.title.y);
-
+		
+			ctx.font = `${title.size}pt ${this.layout.serif}`;
+			ctx.fillText("SPECIALITIES", title.x, title.y);
+		
 			ctx.fillStyle = "black";
-			ctx.font = p.text.size + "pt " + this.layout.serif;
-
-			var specialities = this.specialitiesInfo;
-
-			// only first two fit...
-			var specialCount = 0;
-			for (var i = 0; i < specialities.length; ++i) {
-				if (!specialities[i].title) continue;
-
-				if (specialCount < p.text.max) {
-					var spaceReserved = specialCount == (p.text.max - 1) && specialities.length > p.text.max;
-					var maxWidth = spaceReserved ? p.text.wdt2 : p.text.wdt1;
-					ctx.fillText(specialities[i].title, p.text.x, p.text.y + specialCount * p.text.spacing, maxWidth);
-				}
-
-				specialCount++;
-			}
-
-			if (specialities.length > p.text.max) {
-				ctx.font = p.more.size + "pt " + this.layout.serif;
+			ctx.font = `${text.size}pt ${this.layout.serif}`;
+		
+			specialities.slice(0, specialCount).forEach((speciality, index) => {
+				const spaceReserved = index == (text.max - 1) && specialities.length > text.max;
+				const maxWidth = spaceReserved ? text.wdt2 : text.wdt1;
+				ctx.fillText(speciality.title, text.x, text.y + index * text.spacing, maxWidth);
+			});
+		
+			if (specialities.length > text.max) {
+				ctx.font = `${more.size}pt ${this.layout.serif}`;
 				ctx.textBaseline = "bottom";
 				ctx.textAlign = "right";
-				ctx.fillText("...and more", p.more.x, p.more.y, p.more.wdt);
+				ctx.fillText("...and more", more.x, more.y, more.wdt);
 			}
 		};
-
+		
 		this.createFoldableImage = function () {
-			var front = this.createFrontImage();
-			var back = this.createBackImage();
-
-			var canvas = document.createElement("canvas");
-			var spacing = this.layout.border;
-			var wdt = this.layout.dimensions.wdt;
-			var hgt = this.layout.dimensions.hgt;
-			var short_wdt = wdt - spacing;
-			canvas.width = (short_wdt) * 2;
+			const front = this.createFrontImage();
+			const back = this.createBackImage();
+		
+			const canvas = document.createElement("canvas");
+			const { border: spacing, dimensions: { wdt, hgt } } = this.layout;
+			const short_wdt = wdt - spacing;
+		
+			canvas.width = short_wdt * 2;
 			canvas.height = hgt;
-
-			var ctx = canvas.getContext("2d");
+		
+			const ctx = canvas.getContext("2d");
 			ctx.drawImage(front, 0, 0, short_wdt, hgt, 0, 0, short_wdt, hgt);
 			ctx.drawImage(back, spacing, 0, short_wdt, hgt, short_wdt, 0, short_wdt, hgt);
-
-			var oddfix = (this.layout == layouts.classic) ? -6 : 0; // O_o
-
+		
+			const oddfix = this.layout === layouts.classic ? -6 : 0;
+		
 			ctx.drawImage(document.getElementById('statcard_front_frame'), 0, 0, short_wdt, hgt, 0, 0, short_wdt, hgt);
 			ctx.drawImage(document.getElementById('statcard_back_frame'), spacing, 0, short_wdt, hgt, short_wdt, 0, short_wdt + oddfix, hgt);
-
-
+		
 			return canvas;
 		};
 
 		this.createFrontImage = function () {
-			var canvas = document.createElement("canvas");
-			canvas.width = this.layout.dimensions.wdt;
-			canvas.height = this.layout.dimensions.hgt;
-
-			var ctx = canvas.getContext("2d");
-			ctx.drawImage(document.getElementById('statcard_title_image'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_front_background'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_front_color_area1'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_front_color_area2'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_front_color_area3'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_front_foreground'), 0, 0);
-
+			const canvas = this.createCanvas(this.layout.dimensions);
+			const ctx = canvas.getContext("2d");
+			const imageIds = [
+				'statcard_title_image',
+				'statcard_front_background',
+				'statcard_front_color_area1',
+				'statcard_front_color_area2',
+				'statcard_front_color_area3',
+				'statcard_front_foreground'
+			];
+			imageIds.forEach(id => ctx.drawImage(document.getElementById(id), 0, 0));
 			return canvas;
 		};
-
+		
 		this.createBackImage = function () {
-			var canvas = document.createElement("canvas");
-			canvas.width = this.layout.dimensions.wdt;
-			canvas.height = this.layout.dimensions.hgt;
-
-			var ctx = canvas.getContext("2d");
-
-			ctx.drawImage(document.getElementById('statcard_watermark_background'), 0, 0);
-
-			var watermark = document.getElementById('statcard_watermark_image');
-			ctx.globalAlpha = watermark.style.opacity;
-			ctx.drawImage(watermark, 0, 0);
-			ctx.globalAlpha = 1.0;
-
-			ctx.drawImage(document.getElementById('statcard_back_background'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_back_color_area1'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_back_color_area3'), 0, 0);
-			ctx.drawImage(document.getElementById('statcard_back_foreground'), 0, 0);
-
+			const canvas = this.createCanvas(this.layout.dimensions);
+			const ctx = canvas.getContext("2d");
+			const imageIds = [
+				'statcard_watermark_background',
+				'statcard_watermark_image',
+				'statcard_back_background',
+				'statcard_back_color_area1',
+				'statcard_back_color_area3',
+				'statcard_back_foreground'
+			];
+			
+			imageIds.forEach((id, index) => {
+				if(id === 'statcard_watermark_image') {
+					const watermark = document.getElementById(id);
+					ctx.globalAlpha = watermark.style.opacity;
+					ctx.drawImage(watermark, 0, 0);
+					ctx.globalAlpha = 1.0;
+				} else {
+					ctx.drawImage(document.getElementById(id), 0, 0);
+				}
+			});
 			return canvas;
 		};
-
+		
 		this.updateHelp = function (form) {
-			var selection = form.statcard_format.options[form.statcard_format.selectedIndex].value;
+			const selection = form.statcard_format.value;
 			document.getElementById("statcard_format_help").innerHTML = layouts[selection].help;
 		};
-
+		
 		this.changeLayout = function (layout) {
 			this.layout = layout;
 			this.titleImage.changeLayout(this.layout.titleImageRect);
 			this.watermarkImage.changeLayout(this.layout.watermarkImageRect);
 			this.drawBackground();
 			this.drawForeground();
+		};
+		
+		this.createCanvas = function (dimensions) {
+			const canvas = document.createElement("canvas");
+			canvas.width = dimensions.wdt;
+			canvas.height = dimensions.hgt;
+			return canvas;
 		};
 
 	}
@@ -447,3 +446,38 @@ function colorizeImage(img, color) {
 	ctx.putImageData(to, 0, 0);
 	return canvas;
 };
+
+// Define your helper functions
+function buildExtraMindsSpeciality(extraMinds) {
+	var mt = {};
+	mt.name = "Extra Mind";
+	if (extraMinds > 1) {
+	  mt.name += "s";
+	  mt.title = extraMinds + "x Extra Mind";
+	} else {
+	  mt.title = "Extra Mind";
+	}
+	mt.description = `This unit can take a total of ${extraMinds} extra Action(s) against any target per turn. The same weapon, hand, or equipment item still cannot be used for more than one Action in one turn.`;
+	return mt;
+  }
+  
+  function buildHalfmindSpeciality(mind) {
+	var hm = {};
+	hm.name = halfmind_types[mind.halfmindTypeId].name;
+	hm.description = halfmind_types[mind.halfmindTypeId].help;
+  
+	if (halfmind_types[mind.halfmindTypeId].isProgram) {
+	  if (mind.program && mind.program.length > 0) {
+		hm.ttDescription = mind.program;
+		hm.description = "";
+	  }
+	}
+	return hm;
+  }
+  
+  function buildIncompetentSpeciality(mind) {
+	var ic = {};
+	ic.name = mind_types[mind.mindTypeId].name;
+	ic.description = "Stupid. If the player controls more than one stupid unit, then at the beginning of their turn, one Enemy of the player's choice may choose any one of the stupid units and control it as if it were his own for that turn.";
+	return ic;
+  }

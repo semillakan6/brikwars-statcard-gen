@@ -1,127 +1,106 @@
 class AttributesArea {
-	constructor() {
-		this.drawText = function (ctx, text, i, offset) {
-			ctx.textBaseline = "middle";
-			ctx.textAlign = "center";
-			ctx.shadowBlur = 0;
-			var y = statcard.layout.front.attributes.y + statcard.layout.front.attributes.hgt * i + offset;
-			ctx.fillText(text, statcard.layout.front.attributes.x, y, statcard.layout.front.attributes.wdt);
-		};
+    constructor() {
+        
+        const drawText = (ctx, text, i, offset, config) => {
+            let {x, y, hgt, wdt} = statcard.layout.front.attributes;
+            y += hgt * i + offset;
+            
+            ctx.textBaseline = "middle";
+            ctx.textAlign = "center";
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = config.color;
+            ctx.font = `${config.bold ? "bold " : ""}${config.size}pt ${statcard.layout.serif}`;
+            ctx.fillText(text, x, y, wdt);
+        };
+        
+        this.drawTitleText = (ctx, text, i) => 
+            drawText(ctx, text, i, 20, statcard.layout.front.attributes.title);
+        
+        this.drawSubtextText = (ctx, text, i, offset) => 
+            drawText(ctx, text, i, offset + statcard.layout.front.attributes.subtext.y, statcard.layout.front.attributes.subtext);
+        
+        this.drawValueText = (ctx, text, i, offset) =>
+            drawText(ctx, text, i, offset + statcard.layout.front.attributes.value.y, {...statcard.layout.front.attributes.value, bold: true});
+        
+        this.draw = (ctx) => {
+            this.drawSize(ctx, 0);
+            this.drawArmor(ctx, 1);
+            this.drawMove(ctx, 2);
+            this.drawSkill(ctx, 3);
+        };
 
-		this.drawValueText = function (ctx, text, i, offset) {
-			var p = statcard.layout.front.attributes.value;
-			ctx.fillStyle = p.color;
-			ctx.font = "bold " + p.size + "pt " + statcard.layout.serif;
-			this.drawText(ctx, text, i, p.y + offset);
-		};
 
-		this.drawTitleText = function (ctx, text, i) {
-			var p = statcard.layout.front.attributes.title;
-			ctx.fillStyle = p.color;
-			ctx.font = p.size + "pt " + statcard.layout.serif;
-			this.drawText(ctx, text, i, p.y);
-		};
+        const getSpeedTexts = () => {
+            const { speed: ground } = moc.groundPropulsion;
+            const { speed: fly } = moc.flyingPropulsion;
+            const { speed: thrust } = moc.thrustPropulsion;
+            let speedText = "-", speedSubText;
 
-		this.drawSubtextText = function (ctx, text, i, offset) {
-			var p = statcard.layout.front.attributes.subtext;
-			ctx.fillStyle = p.color;
-			ctx.font = p.size + "pt " + statcard.layout.serif;
-			this.drawText(ctx, text, i, p.y + offset);
-		};
+            if (!(thrust || fly || ground)) {
+                speedText = "-";
+            } else if (!!ground + !!fly + !!thrust === 1) {
+                if (ground) {
+                    speedText = ground;
+                } else if (fly) {
+                    speedText = fly;
+                    speedSubText = "Flying";
+                } else {
+                    speedText = thrust;
+                    speedSubText = "Thrust";
+                }
+            } else if (ground && (fly || thrust)) {
+                speedText = ground;
+                if (fly && thrust) {
+                    speedSubText = "(Fly: " + fly + ", Thrust: " + thrust + ")";
+                } else if (fly) {
+                    speedSubText = "(Flying: " + fly + ")";
+                } else {
+                    speedSubText = "(Thrust: " + thrust + ")";
+                }
+            } else if (thrust && fly) {
+                speedText = fly;
+                speedSubText = "Flying (Thrust: " + thrust + ")";
+            }
+            return { speed: speedText, speedSub: speedSubText };
+        };
 
-		this.draw = function (ctx) {
-			this.drawSize(ctx, 0);
-			this.drawArmor(ctx, 1);
-			this.drawMove(ctx, 2);
-			this.drawSkill(ctx, 3);
-		};
+        this.drawMove = (ctx, i) => {
+            this.drawTitleText(ctx, "Move", i);
 
-		this.getSpeedTexts = function () {
-			var speedText, speedSubText;
+            const { speed, speedSub } = getSpeedTexts();
 
-			var ground = moc.groundPropulsion.speed;
-			var fly = moc.flyingPropulsion.speed;
-			var thrust = moc.thrustPropulsion.speed;
+            const fields = moc.specialities.getMoveFieldTexts();
+            if (speedSub) {
+                fields.unshift(speedSub);
+            }
 
-			// none
-			if (!thrust && !fly && !ground) {
-				speedText = "-";
-			}
-
-			// only one
-			else if (!!ground + !!fly + !!thrust == 1) {
-				if (ground) {
-					speedText = ground;
-				}
-				else if (fly) {
-					speedText = fly;
-					speedSubText = "Flying";
-				}
-
-				else {
-					speedText = thrust;
-					speedSubText = "Thrust";
-				}
-			}
-
-			// ground + more
-			else if (ground && (fly || thrust)) {
-				speedText = ground;
-
-				if (fly && thrust) {
-					speedSubText = "(Fly: " + fly + ", Thrust: " + thrust + ")";
-				}
-				else if (fly) {
-					speedSubText = "(Flying: " + fly + ")";
-				}
-
-				else {
-					speedSubText = "(Thrust: " + thrust + ")";
-				}
-			}
-
-			// thrust + flying
-			else if (thrust && fly) {
-				speedText = fly;
-				speedSubText = "Flying (Thrust: " + thrust + ")";
-			}
-			return { speed: speedText, speedSub: speedSubText };
-		};
-
-		this.drawMove = function (ctx, i) {
-			this.drawTitleText(ctx, "Move", i);
-
-			var texts = this.getSpeedTexts();
-
-			var fields = moc.specialities.getMoveFieldTexts();
-			if (texts.speedSub) {
-				fields.unshift(texts.speedSub);
-			}
-
-			var subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
-			this.drawValueText(ctx, texts.speed, i, subTextOffset);
-			this.drawSubtexts(ctx, fields, i, subTextOffset);
-		};
-
-		this.drawArmor = function (ctx, i) {
+            const subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
+            this.drawValueText(ctx, speed, i, subTextOffset);
+            this.drawSubtexts(ctx, fields, i, subTextOffset);
+        };
+            
+        // Similar changes for other draw* methods
+        
+        this.drawArmor = (ctx, i) => {
 			this.drawTitleText(ctx, "Armor", i);
-
-			var energyShield = moc.equipment.getEnergyShieldStrength();
-			var armorPlating = moc.equipment.hasArmorPlating();
-
-			var fields = moc.specialities.getArmorFieldTexts();
+		
+			const energyShield = moc.equipment.getEnergyShieldStrength();
+			const armorPlating = moc.equipment.hasArmorPlating();
+		
+			const fields = moc.specialities.getArmorFieldTexts();
 			if (armorPlating) fields.unshift("Armor Plating");
 			if (energyShield > 0) fields.unshift(energyShield + "x Energy Shield");
-
-			var subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
+		
+			const subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
+		
 			this.drawValueText(ctx, moc.structure.getArmorRating(), i, subTextOffset);
 			this.drawSubtexts(ctx, fields, i, subTextOffset);
 		};
-
-		this.drawSkill = function (ctx, i) {
+		
+		this.drawSkill = (ctx, i) => {
 			this.drawTitleText(ctx, "Skill", i);
-
-			var skillText = "-", halfMindText, incompetentText;
+		
+			let skillText = "-", halfMindText, incompetentText;
 			if (moc.mind.active) {
 				skillText = mind_types[moc.mind.mindTypeId].skill;
 				if (moc.mind.isHalfMind) {
@@ -131,31 +110,25 @@ class AttributesArea {
 					incompetentText = mind_types[moc.mind.mindTypeId].name;
 				}
 			}
-
-			var spacing = statcard.layout.front.attributes.subtext.spacing;
-			var fields = moc.specialities.getSkillFieldTexts();
+		
+			const fields = moc.specialities.getSkillFieldTexts();
 			if (halfMindText) fields.unshift(halfMindText);
 			if (incompetentText) fields.unshift(incompetentText);
-
-			var subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
+		
+			const subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
+		
 			this.drawValueText(ctx, skillText, i, subTextOffset);
 			this.drawSubtexts(ctx, fields, i, subTextOffset);
 		};
 
-		this.drawSize = function (ctx, i) {
-			this.drawTitleText(ctx, "Size", i);
-			this.drawValueText(ctx, moc.structure.size, i, 0);
-		};
+        this.drawSize = (ctx, i) => {
+            this.drawTitleText(ctx, "Size", i);
+            this.drawValueText(ctx, moc.structure.size, i, 0);
+        };
 
-		this.drawSubtexts = function (ctx, fields, i, subTextOffset) {
-			var spacing = statcard.layout.front.attributes.subtext.spacing;
-
-			var subTextPos = subTextOffset;
-			for (var j = 0; j < fields.length && j < 2; ++j) {
-				this.drawSubtextText(ctx, fields[j], i, subTextPos);
-				subTextPos += spacing;
-			}
-		};
-
-	}
+		this.drawSubtexts = (ctx, fields, i, subTextOffset) => {
+            const {spacing} = statcard.layout.front.attributes.subtext;
+            fields.slice(0, 2).forEach((field, idx) => this.drawSubtextText(ctx, field, i, subTextOffset + idx * spacing));
+        };
+    }
 }

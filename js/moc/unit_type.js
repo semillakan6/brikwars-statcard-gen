@@ -44,15 +44,19 @@ $(document).ready(function () {
         switch (selectedUnitType) {
             case 'minifig':
                 setSelectedValues('1', true, '4', '1', true);
+                $('#statcard_damagetable').prop('checked', false).change();
                 break;
             case 'hero_minifig':
                 setSelectedValues('2', true, '2d6', '2', true);
+                $('#statcard_damagetable').prop('checked', false).change();
                 break;
             case 'greatleader_minifig':
                 setSelectedValues('2', true, '4', '2', true);
+                $('#statcard_damagetable').prop('checked', false).change();
                 break;
             case 'horse':
                 setSelectedValues('1', false, '4', '1', true);
+                $('#statcard_damagetable').prop('checked', false).change();
                 break;
             case 'vehicle':
             case 'flying_machine':
