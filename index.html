@@ -81,12 +81,12 @@
 																	<option value="greatleader_minifig">Great Leader
 																	</option>
 																	<option value="horse">Horse</option>
-																	<option value="vehicle">Vehicle</option>
-																	<option value="flying_machine">Flying Vehicle
 																	</option>
 																	<option value="creature">Creature</option>
 																	<option value="flying_creature">Flying Creature
 																	</option>
+																	<option value="vehicle">Vehicle</option>
+																	<option value="flying_machine">Flying Vehicle
 																	<option value="structure">Structure</option>
 																</select>
 															</div>
@@ -147,12 +147,7 @@
 														<td>
 															<div class="col-md-12 col-lg-12">
 																<div class="input-group mb-3">
-																	<input id="structure_size" name="structure_size"
-																		type="number" value="0" min="0" step="1"
-																		size="2" onchange="calculate();"
-																		onkeyup="calculate();" class="form-control"
-																		aria-label="MOC or Minifig size"
-																		aria-describedby="creature-size">
+																	<input id="structure_size" name="structure_size" type="number" value="0" min="0" step="1" size="2" onchange="handleInputChange();" onkeyup="handleInputChange();" class="form-control" aria-label="MOC or Minifig size" aria-describedby="creature-size">
 																	<span class="input-group-text"
 																		id="creature-size">inch</span>
 																</div>
@@ -263,9 +258,9 @@
 																<thead>
 																	<tr>
 																		<th scope="col">Available Unit Inches (Ü)</th>
-																		<th scope="col"><input type="text"
-																				class="form-control" placeholder="Ü"
-																				disabled /></th>
+																		<th scope="col">
+																			<input type="text" class="form-control" id="u_inches" name="u_inches" placeholder="Ü" readonly />
+																		</th>
 																	</tr>
 																	<tr>
 																		<td scope="col">Enhancement</td>
@@ -409,6 +404,26 @@
 															</table>
 														</td>
 													</tr>
+													<tr id="thrust">
+														<th>
+															<input name="prop_thrust" value="1" type="checkbox"
+																onchange="calculate();" />
+															Thrusters
+															<div class="help">jets, propellers, sails, rockets...</div>
+														</th>
+														<td colspan="2">
+															<div class="input-group mb-3">
+																<select class="form-select" id="prop_thrust_speed"
+																	name="prop_thrust_speed" onchange="calculate();">
+																	<option value="0">No Thruster</option>
+																	<option value="1">Small Thruster</option>
+																	<option value="2">Medium Thruster</option>
+																	<option value="3">Large Thruster</option>
+																	<option value="4">Giant Thruster</option>
+																</select>
+															</div>
+														</td>
+													</tr>
 												</tbody>
 											</table>
 										</div>
@@ -453,32 +468,15 @@
 														</th>
 														<td>
 															<div class="input-group mb-3">
-																<input class="form-control" name="prop_flying_speed" min="5" max="15" step="1" size="2"
-																	type="number" disabled="disabled"
+																<input class="form-control" name="prop_flying_speed"
+																	min="5" max="15" step="1" size="2" type="number"
+																	disabled="disabled"
 																	onclick="this.form.prop_flying_default.checked = false;"
 																	onkeyup=" calculate();" onchange="calculate();" />
 																<span class="input-group-text"
 																	id="inch_span">inch</span>
 															</div>
 															<div class="example" id="prop_flying_example"></div>
-														</td>
-													</tr>
-													<tr id="thrust">
-														<th>
-															<input name="prop_thrust" value="1" type="checkbox"
-																onchange="calculate();" disabled />
-															Thrust Movement
-															<div class="help">jets, propellers, sails, rockets...</div>
-														</th>
-														<td>
-															<div class="input-group mb-3">
-																<input class="form-control" name="prop_thrust_speed" min="5" max="15" step="1" size="2"
-																	type="number" disabled="disabled"
-																	onclick="this.form.prop_flying_default.checked = false;"
-																	onkeyup=" calculate();" onchange="calculate();" />
-																<span class="input-group-text"
-																	id="inch_span">inch</span>
-															</div>
 														</td>
 													</tr>
 													<tr>
@@ -1082,6 +1080,7 @@
 		</div>
 	</div>
 	<script src="js/moc/unit_type.js"></script>
+	<script src="js/moc/enhancements.js"></script>
 	<script src="js/moc/moc.js"></script>
 	<script src="js/moc/structure.js"></script>
 	<script src="js/moc/weapons.js"></script>

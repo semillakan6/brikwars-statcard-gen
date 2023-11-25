@@ -30,7 +30,7 @@ class Structure {
 			}
 			// round to halves
 			this.structureLevel = Math.round(2 * this.structureLevel) / 2.0;
-			this.cost = this.size * this.structureLevel;
+			this.cost = this.size;
 		};
 
 		this.applyFrom = function (form) {
