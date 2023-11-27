@@ -100,7 +100,7 @@ class BacksideArea {
 
 					var power = Math.max(1, moc.structure.size - i);
 					if (!moc.flyingPropulsion.active) power *= 2;
-					var powerText = power;
+					var powerText = power*2; //Power scale
 
 					var powerDiff = moc.powerUsage - power;
 					var powerRed = powerDiff > 0 ? 128 + powerDiff * 32 : 0;

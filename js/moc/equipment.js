@@ -94,102 +94,127 @@ function Equipments(moc) {
 	this.init();
 
 	this.add = function () {
-		var i = this.stuff.push(new Equipment(this.moc.structure.size)) - 1;
+		const index = this.stuff.push(new Equipment(this.moc.structure.size)) - 1;
 
-		var typeSelect = document.createElement("select");
-		typeSelect.id = "equipment_" + i + "_type";
-		typeSelect.onchange = function () { calculate(); };
-		//		typeSelect.onmousemove = function() { calculate(); };
-		typeSelect.onkeyup = function () { calculate(); };
+		appendElements("equipment", createTableRow(index), createSecondRow(index));
+	};
 
-		for (j = 0; j < equipment_types.length; j++) {
 
-			var equipment_type = equipment_types[j];
-			var option = document.createElement("option");
-			option.text = equipment_type.name;
-			option.value = j;
-			typeSelect.appendChild(option);
-		}
+	function createSelectElement(index, equipmentTypes) {
+		const selectElement = document.createElement("select");
 
-		var typeCell = document.createElement("td");
-		typeCell.appendChild(typeSelect);
+		selectElement.id = `equipment_${index}_type`;
+		selectElement.onchange = calculate;
+		selectElement.onkeyup = calculate;
 
-		var sizeInput = document.createElement("input");
-		sizeInput.type = "number";
-		sizeInput.id = "equipment_" + i + "_size";
-		sizeInput.min = 1;
-		sizeInput.step = 1;
-		sizeInput.size = 1;
-		//sizeInput.onclick = function(evt) { evt.target.select(); };
-		sizeInput.onkeyup = function () { calculate() };
-		sizeInput.onchange = function () { calculate() };
-		var sizeCell = document.createElement("td");
-		sizeCell.appendChild(sizeInput);
+		equipmentTypes.forEach((equipmentType, i) => {
+			let option = document.createElement("option");
+			option.text = equipmentType.name;
+			option.value = i;
 
-		var strengthInput = document.createElement("input");
-		strengthInput.type = "number";
-		strengthInput.id = "equipment_" + i + "_strength";
-		strengthInput.min = 1;
-		strengthInput.step = 1;
-		strengthInput.size = 1;
-		//strengthInput.onclick = function(evt) { evt.target.select(); };
-		strengthInput.onkeyup = function () { calculate() };
-		strengthInput.onchange = function () { calculate() };
-		var strengthCell = document.createElement("td");
-		strengthCell.appendChild(strengthInput);
+			selectElement.appendChild(option);
+		});
 
-		var notesInput = document.createElement("input");
-		notesInput.disabled = true;
-		notesInput.id = "equipment_" + i + "_notes";
-		notesInput.style.width = "180pt";
-		var notesCell = document.createElement("td");
-		notesCell.appendChild(notesInput);
+		return selectElement;
+	}
 
-		var button = document.createElement("input");
+
+	function createInputElement(type, index) {
+		const inputElement = document.createElement("input");
+
+		inputElement.type = "number";
+		inputElement.class = "form-control";
+		inputElement.id = `equipment_${index}_${type}`;
+		inputElement.min = 1;
+		inputElement.step = 1;
+		inputElement.size = 1;
+		inputElement.onkeyup = calculate;
+		inputElement.onchange = calculate;
+
+		return inputElement;
+	}
+
+
+	function createButton(index) {
+		const button = document.createElement("input");
+
 		button.type = "button";
 		button.value = "X";
-		button.id = "equipment_" + i + "_remove";
-		button.onclick = function () { moc.equipment.remove(i); calculate(); };
+		button.id = `equipment_${index}_remove`;
+		button.onclick = function () {
+			moc.equipment.remove(index);
+			calculate();
+		};
 
-		var removeCell = document.createElement("td");
-		removeCell.appendChild(button);
+		return button;
+	}
 
-		var costCell = document.createElement("td");
-		costCell.className = "cost";
-		var costInput = document.createElement("input");
-		costInput.disabled = true;
-		costInput.size = 1;
-		costInput.type = "text";
-		costInput.id = "equipment_" + i + "_cost";
-		costCell.appendChild(costInput);
 
-		var row = document.createElement("tr");
-		row.id = "equipment_" + i;
+	function createCell(elementToAppend) {
+		const cell = document.createElement("td");
+		cell.appendChild(elementToAppend);
+		return cell;
+	}
+
+
+	function createTableRow(index) {
+		const row = document.createElement("tr");
+
+		row.id = `equipment_${index}`;
 		row.className = "first";
-		row.appendChild(typeCell);
-		row.appendChild(sizeCell);
-		row.appendChild(strengthCell);
-		row.appendChild(notesCell);
-		row.appendChild(removeCell);
-		row.appendChild(costCell);
+		row.append(
+			createCell(createSelectElement(index, equipment_types)),
+			createCell(createInputElement("size", index)),
+			createCell(createInputElement("strength", index)),
+			createCell(createInputElement("notes", index)),
+			createCell(createButton(index)),
+			createCell(createCostCell(index))
+		);
 
-		var row2 = document.createElement("tr");
-		row2.className = "second";
-		var remarkCell = document.createElement("td");
-		remarkCell.id = "equipment_" + i + "_remark";
+		return row;
+	}
+
+
+	function createSecondRow(index) {
+		const row = document.createElement("tr");
+		const remarkCell = document.createElement("td");
+		const otherCell = document.createElement("td");
+
+		row.className = "second";
+
+		remarkCell.id = `equipment_${index}_remark`;
 		remarkCell.appendChild(document.createTextNode(" "));
 		remarkCell.className = "help";
 		remarkCell.colSpan = 5;
 
-		var otherCell = document.createElement("td");
 		otherCell.className = "cost";
-		row2.appendChild(remarkCell);
-		row2.appendChild(otherCell);
 
-		document.getElementById("equipment").appendChild(row);
-		document.getElementById("equipment").appendChild(row2);
+		row.append(remarkCell, otherCell);
 
-	};
+		return row;
+	}
+
+
+	function createCostCell(index) {
+		const costCell = document.createElement("td");
+		const costInput = document.createElement("input");
+
+		costCell.className = "cost";
+
+		costInput.disabled = true;
+		costInput.size = 1;
+		costInput.type = "text";
+		costInput.id = `equipment_${index}_cost`;
+
+		costCell.appendChild(costInput);
+
+		return costCell;
+	}
+
+
+	function appendElements(elementId, ...elements) {
+		elements.forEach(element => document.getElementById(elementId).appendChild(element));
+	}
 
 	this.remove = function (i) {
 		this.stuff[i] = null;

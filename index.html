@@ -24,6 +24,7 @@
 	<!-- Link to Bootstrap CSS and some attributes for its scripts included -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
 		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<link href="node_modules\filepond\dist\filepond.min.css" rel="stylesheet">
 
@@ -147,7 +148,13 @@
 														<td>
 															<div class="col-md-12 col-lg-12">
 																<div class="input-group mb-3">
-																	<input id="structure_size" name="structure_size" type="number" value="0" min="0" step="1" size="2" onchange="handleInputChange();" onkeyup="handleInputChange();" class="form-control" aria-label="MOC or Minifig size" aria-describedby="creature-size">
+																	<input id="structure_size" name="structure_size"
+																		type="number" value="0" min="0" step="1"
+																		size="2" onchange="handleInputChange();"
+																		onkeyup="handleInputChange();"
+																		class="form-control"
+																		aria-label="MOC or Minifig size"
+																		aria-describedby="creature-size" disabled>
 																	<span class="input-group-text"
 																		id="creature-size">inch</span>
 																</div>
@@ -259,7 +266,9 @@
 																	<tr>
 																		<th scope="col">Available Unit Inches (Ü)</th>
 																		<th scope="col">
-																			<input type="text" class="form-control" id="u_inches" name="u_inches" placeholder="Ü" readonly />
+																			<input type="text" class="form-control"
+																				id="u_inches" name="u_inches"
+																				placeholder="Ü" readonly />
 																		</th>
 																	</tr>
 																	<tr>
@@ -488,49 +497,45 @@
 												</tbody>
 											</table>
 										</div>
-										<table>
-											<thead>
-												<tr>
-													<th colspan="8">Armament (<a target="_blank" class="ref"
-															href="http://www.brikwars.com/rules/2010/8.htm">Chapter 8:
-															Weaponry</a>)</th>
-													<th style="width: 40pt">Cost</th>
-												</tr>
-												<tr id="weapons_head">
-													<th style="width: 105pt">Type</th>
-													<th style="width: 35pt">Size</th>
-													<th style="width: 35pt">Amount</th>
-													<th style="width: 80pt">Custom Name</th>
-													<th style="width: 25pt">Use</th>
-													<th style="width: 25pt">Range</th>
-													<th>Damage / Notes</th>
-													<th style="width: 30pt"></th>
-													<th style="width: 40pt"></th>
-												</tr>
-											</thead>
-											<tbody id="weapons">
-											</tbody>
-											<tbody>
-												<tr>
-													<td colspan="6">
-														<input type="button" value="+"
-															onclick="moc.armament.add(); calculate();" />
-														<input type="checkbox" name="weapons_minifigs" /> add a Bastard
-														Minifig weapon
-														instead
-													</td>
-													<td colspan="2" style="text-align: right">Power Usage
-														<input type="text" disabled="disabled" name="power_usage"
-															size="1" />/
-														<input type="text" disabled="disabled" name="total_power"
-															size="1" />
-													</td>
-													<td>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-
+										<div class="table-responsive" id="weapon_table">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th colspan="9">Armament 
+															<a target="_blank" class="ref" href="http://www.brikwars.com/rules/2020/8.htm">
+																Chapter 8: Weaponry
+															</a>
+														</th>
+													</tr>
+													<tr id="weapons_head">
+														<th class="col">Type</th>
+														<th class="col">Size</th>
+														<th class="col">Amount</th>
+														<th class="col">Custom Name</th>
+														<th class="col">Use</th>
+														<th class="col">Range</th>
+														<th class="col">Damage / Notes</th>
+														<th class="col"></th>
+													</tr>
+												</thead>
+												<tbody id="weapons"></tbody>
+												<tfoot>
+													<tr>
+														<td colspan="6">
+															<div class="d-flex align-items-center justify-content-start">
+																<button type="button" class="btn btn-sm btn-outline-dark me-3" onclick="moc.armament.add(); calculate();">
+																	<i class="fas fa-plus"></i> Add
+																</button>
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox" value="" id="weapons_minifigs" name="weapons_minifigs">
+																	<label class="form-check-label" for="weapons_minifigs">Show Bastard Minifig weapons instead</label>
+																</div>
+															</div>
+														</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
 										<table>
 											<thead>
 												<tr>
