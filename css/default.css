@@ -265,3 +265,58 @@ h1
 .inline-block {
     display: inline-block !important;
 }
+
+.icon-td {
+    position: relative;
+    font-family: 'Alegreya', Georgia, "Times New Roman", Times, serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: #000;
+    min-height: 120px;
+    line-height: 120px; /* to center the text vertically */
+}
+
+.content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.content span {
+    position: relative;
+    z-index: 1; /* Place the text above the image */
+}
+
+.icon {
+    position: absolute;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    z-index: 0; /* Place the image beneath the text */
+}
+
+.armor .icon {
+    background: url('../images/attribute_icons/ico_50_armor_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.power .icon {
+    background: url('../images/attribute_icons/ico_50_power_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.move .icon {
+    background: url('../images/attribute_icons/ico_50_move_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.action .icon {
+    background: url('../images/attribute_icons/ico_50_action_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.value .icon {
+    background: url('../images/attribute_icons/ico_50_unit_inches_fill.png') no-repeat center;
+    background-size: cover;
+}
