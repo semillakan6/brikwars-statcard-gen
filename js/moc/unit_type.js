@@ -77,7 +77,7 @@ $(document).ready(function () {
                 setSelectedValues('2', false, false, '', '0.5', false, true, 0, 0);
                 break;
             case 'flying_machine':
-                setSelectedValues('2', false, false, '', '0.5', true, true, 0, 5);
+                setSelectedValues('2', false, false, '', '0.5', false, true, 0, 5);
                 break;
         }
     }

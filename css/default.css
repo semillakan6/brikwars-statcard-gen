@@ -320,3 +320,7 @@ h1
     background: url('../images/attribute_icons/ico_50_unit_inches_fill.png') no-repeat center;
     background-size: cover;
 }
+
+.enhancement_table td {
+	vertical-align: middle;
+}
