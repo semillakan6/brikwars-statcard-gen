@@ -42,10 +42,26 @@ $(document).ready(function () {
     upgradeInputs.forEach(function (elem) {
         $(elem).data('previousValue', 0);
     });
+    // Initially hide the span
+    $('#deflectionStatus').css('visibility', 'hidden');
 
+    // When deflection check state changes
+    $("#deflectionCheck").change(function () {
+        if (this.checked && !$(this).data("checked")) {
+            $('#deflectionStatus').css('visibility', 'visible'); 
+            let u_inches = parseInt($('#u_inches').val());
+            $('#u_inches').val(u_inches - 1);
+            $(this).data("checked", true);
+        } else if (!this.checked && $(this).data("checked")) {
+            $('#deflectionStatus').css('visibility', 'hidden');
+            let u_inches = parseInt($('#u_inches').val());
+            $('#u_inches').val(u_inches + 1);
+            $(this).data("checked", false);
+        }
+    });
     // Function to update the txtAmorTotal, txtPowerTotal and txtMoveTotal fields
     function updateFields() {
-        let unit_type = document.getElementById('unit_type').value; 
+        let unit_type = document.getElementById('unit_type').value;
         let amorUpgradeVal = $('#txtAmorUpgrade').val();
         let powerUpgradeVal = $('#txtPowerUpgrade').val();
         let moveUpgradeVal = $('#txtMoveUpgrade').val();
@@ -68,30 +84,27 @@ $(document).ready(function () {
         }
         $('#txtMoveTotal').val(moveTotalValue + "''");
         $('#txtMoveTotal').append("''");
-        
-        switch(actionUpgradeVal) {
-            case 0 : $('#txtActionTotal').val('1d6');
-                     break;
-            case 1 : $('#txtActionTotal').val('1d8');
-                     break;
-            case 2 : $('#txtActionTotal').val('1d10');
-                     break;
-            case 3 : $('#txtActionTotal').val('1d12');
-                     break;
+
+        switch (actionUpgradeVal) {
+            case 0: $('#txtActionTotal').val('1d6');
+                break;
+            case 1: $('#txtActionTotal').val('1d8');
+                break;
+            case 2: $('#txtActionTotal').val('1d10');
+                break;
+            case 3: $('#txtActionTotal').val('1d12');
+                break;
         }
-        
+
         if (unit_type == "flying_machine") {
             $('#txtMoveUpgrade').attr('max', '3');
         } else {
             $('#txtMoveUpgrade').attr('max', '2');
         }
-        if ($('#deflectionCheck').is(':checked')) {
-            // Shield Icon HTML not provided in the question
-            $('#txtAmorTotal').after('<span><img src="images/attribute_icons/ico_50_armor_fill.png" alt="Shield icon" width="12%"> has deflection</span>');
-        }
+
         $('#txtMindTotal').val(mindUpgradeVal <= 0 ? '0' : mindUpgradeVal + 'd6');
 
-        if(valueUpgradeVal <= 0) {
+        if (valueUpgradeVal <= 0) {
             $('#txtValueTotal').val(size);
             $('#structure_cost').val(size);
         } else {
@@ -100,7 +113,7 @@ $(document).ready(function () {
                 newSize = size * 0.25;
                 $('#txtValueUpgrade').val(size * 2 - newSize * 4); //new valueUpgrade formula
             }
-            
+
             $('#structure_cost').val(newSize);
             $('#txtValueTotal').val(newSize);
         }

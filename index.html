@@ -176,8 +176,9 @@
 															</div>
 														</td>
 														<td class="cost">
-															<input type="text" value="0" id="structure_cost" name="structure_cost" size="1"
-																disabled="disabled" class="form-control"
+															<input type="text" value="0" id="structure_cost"
+																name="structure_cost" size="1" disabled="disabled"
+																class="form-control"
 																aria-label="MOC or Minifig total cost"
 																aria-describedby="creature-cost" />
 														</td>
@@ -285,9 +286,14 @@
 															<div class="content">
 																<div class="icon"></div>
 																<span>Armor</span>
-																<input type="text" class="form-control m-3"
-																	id="txtAmorTotal" name="txtAmorTotal" value="1d6"
-																	disabled />
+																<div style="display: flex; flex-direction: row; align-items: center; justify-content: start;">
+																	<input type="text" class="form-control ml-3" id="txtAmorTotal" name="txtAmorTotal" value="1d6" disabled />
+																	<span id="deflectionStatus" name="deflectionStatus"
+																		style="font-family: Calibri, sans-serif !important; font-size: 12px;">
+																		<img src="images/attribute_icons/ico_50_armor_fill.png" alt="Shield icon" width="16%"> 
+																		has deflection
+																	</span>
+																</div>
 															</div>
 														</td>
 														<td><input type="number" class="form-control"
