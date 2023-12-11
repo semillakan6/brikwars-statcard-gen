@@ -286,11 +286,15 @@
 															<div class="content">
 																<div class="icon"></div>
 																<span>Armor</span>
-																<div style="display: flex; flex-direction: row; align-items: center; justify-content: start;">
-																	<input type="text" class="form-control ms-3" style="width: 70%;" id="txtAmorTotal" name="txtAmorTotal" value="1d6" disabled />
+																<div
+																	style="display: flex; flex-direction: row; align-items: center; justify-content: start;">
+																	<input type="text" class="form-control ms-3"
+																		style="width: 70%;" id="txtAmorTotal"
+																		name="txtAmorTotal" value="1d6" disabled />
 																	<span id="deflectionStatus" name="deflectionStatus"
 																		style="font-family: Calibri, sans-serif !important; font-size: 15px;">
-																		<img src="images/attribute_icons/ico_50_armor_fill.png" alt="Shield icon" width="18%"> 
+																		<img src="images/attribute_icons/ico_50_armor_fill.png"
+																			alt="Shield icon" width="18%">
 																		has deflection
 																	</span>
 																</div>
@@ -310,9 +314,18 @@
 															<div class="content">
 																<div class="icon"></div>
 																<span>Power</span>
-																<input type="text" class="form-control m-3"
-																	id="txtPowerTotal" name="txtPowerTotal" value="x2"
-																	disabled />
+																<div class="input-group p-3">
+																	<input type="text" class="form-control"
+																		id="txtPowerTotal" name="txtPowerTotal" value="2x"
+																		disabled />
+																	<span class="input-group-text">Power Up</span>
+																</div>
+																<div class="input-group p-3">
+																	<input type="text" class="form-control"
+																		id="txtPowerAvailable" name="txtPowerAvailable"
+																		placeholder="0" disabled>
+																	<span class="input-group-text">Power Available</span>
+																</div>
 															</div>
 														</td>
 														<td>
@@ -490,7 +503,7 @@
 																		alt="Power" height="25" />: +1Ü</p>
 															</td>
 															<td class="text-center">
-																<input type="text" class="form-control" placeholder="0"
+																<input type="number" class="form-control" value="0" min="0"
 																	id="value_impairmentCheck"
 																	name="value_impairmentCheck" />
 															</td>
@@ -547,7 +560,6 @@
 																<input class="form-control" name="prop_ground_speed"
 																	min="0" max="10" step="1" size="2" type="number"
 																	disabled="disabled"
-																	onclick="this.form.prop_ground_default.checked = false;"
 																	onkeyup="calculate();" onchange="calculate();" />
 																<span class="input-group-text"
 																	id="inch_span">inch</span>
@@ -566,7 +578,6 @@
 																<input class="form-control" name="prop_flying_speed"
 																	min="5" max="15" step="1" size="2" type="number"
 																	disabled="disabled"
-																	onclick="this.form.prop_flying_default.checked = false;"
 																	onkeyup=" calculate();" onchange="calculate();" />
 																<span class="input-group-text"
 																	id="inch_span">inch</span>

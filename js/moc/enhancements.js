@@ -25,6 +25,11 @@ function updateUInchesValue() { //Passed unit_type as a parameter
             }
         }
     }
+
+    var txtPowerTotalValue = $('#txtPowerTotal').val();
+    var powerTotal = parseFloat(txtPowerTotalValue.substring(0, txtPowerTotalValue.length)); //remove 'x' from string
+    var txtPowerAvailable = powerTotal * parseInt($('#structure_size').val());
+    $('#txtPowerAvailable').val(txtPowerAvailable);
 }
 $(document).ready(function () {
 
@@ -48,7 +53,7 @@ $(document).ready(function () {
     // When deflection check state changes
     $("#deflectionCheck").change(function () {
         if (this.checked && !$(this).data("checked")) {
-            $('#deflectionStatus').css('visibility', 'visible'); 
+            $('#deflectionStatus').css('visibility', 'visible');
             let u_inches = parseInt($('#u_inches').val());
             $('#u_inches').val(u_inches - 1);
             $(this).data("checked", true);
@@ -71,7 +76,16 @@ $(document).ready(function () {
         let size = parseInt($('#structure_size').val());
 
         $('#txtAmorTotal').val(amorUpgradeVal <= 0 ? '1d6' : (parseInt(amorUpgradeVal) + 'd10'));
-        $('#txtPowerTotal').val((2 + parseInt(powerUpgradeVal)) + 'x');
+        // Update txtPowerTotal
+        var powerTotal = (2 + parseInt(powerUpgradeVal));
+        $('#txtPowerTotal').val(powerTotal + 'x');
+
+        // Calculate txtPowerAvailable specifically
+        var txtPowerTotalValue = $('#txtPowerTotal').val();
+        var powerTotalNumeric = parseFloat(txtPowerTotalValue.substring(0, txtPowerTotalValue.length)); // remove 'x' from string
+        var txtPowerAvailable = powerTotalNumeric * size;
+        $('#txtPowerAvailable').val(txtPowerAvailable);
+
         let moveTotalValue;
         if (moveUpgradeVal == 1) {
             moveTotalValue = '5';
@@ -146,6 +160,49 @@ $(document).ready(function () {
             $('#u_inches').val(u_inches);
             updateFields();
         });
+    });
+    // When armor_impairmentCheck state changes
+    $("#armor_impairmentCheck").change(function () {
+        if (this.checked) {
+            $('#txtAmorTotal').val('0'); 
+        } else {
+            // ... call the function which calculates the normal armor value
+            updateFields();
+        }
+    });
+
+    // When power_impairmentCheck state changes
+    $("#power_impairmentCheck").change(function () {
+        if (this.checked) {
+            var powerTotalString = $('#txtPowerAvailable').val();
+            var powerTotal = parseFloat(powerTotalString) / 2; // cut in half
+            $('#txtPowerAvailable').val(powerTotal);
+        } else {
+            // ... call the function which calculates the normal power value
+            updateFields();
+        }
+    });
+
+    var half_speed_flag = false;
+
+    // When speed_impairmentCheck state changes
+    $("#speed_impairmentCheck").change(function () {
+        if (this.checked) {
+            half_speed_flag = true;
+        } else {
+            half_speed_flag = false;
+        }
+    });
+
+    var half_minded_flag = false;
+
+    // When action_impairmentCheck state changes
+    $("#action_impairmentCheck").change(function () {
+        if (this.checked) {
+            half_minded_flag = true;
+        } else {
+            half_minded_flag = false;
+        }
     });
 
 });
