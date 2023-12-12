@@ -28,7 +28,7 @@ class Moc {
 	}
 
 	calculateCost() {
-		this.cost = this.structure.size; // add other cost considerations here
+		this.cost = this.structure.cost; // add other cost considerations here
 	}
 
 	calculate() {

@@ -1,7 +1,17 @@
 function handleInputChange() {
+    updateUInchesValue();
     // Call original calculate function
     calculate();
-    updateUInchesValue();
+}
+
+function PowerCalc() {
+    let txtPowerTotalValue = $('#txtPowerTotal').val();
+    let powerTotal = parseFloat(txtPowerTotalValue.substring(0, txtPowerTotalValue.length)); //remove 'x' from string
+    let txtPowerAvailable = powerTotal * parseInt($('#structure_size').val());
+    if($("#power_impairmentCheck").is(":checked")) {
+        txtPowerAvailable = parseInt($('#structure_size').val()); // cut in half if power_impairmentCheck is checked
+    }
+    $('#txtPowerAvailable').val(txtPowerAvailable);
 }
 
 function updateUInchesValue() { //Passed unit_type as a parameter
@@ -26,10 +36,7 @@ function updateUInchesValue() { //Passed unit_type as a parameter
         }
     }
 
-    var txtPowerTotalValue = $('#txtPowerTotal').val();
-    var powerTotal = parseFloat(txtPowerTotalValue.substring(0, txtPowerTotalValue.length)); //remove 'x' from string
-    var txtPowerAvailable = powerTotal * parseInt($('#structure_size').val());
-    $('#txtPowerAvailable').val(txtPowerAvailable);
+    PowerCalc();
 }
 $(document).ready(function () {
 
@@ -64,6 +71,7 @@ $(document).ready(function () {
             $(this).data("checked", false);
         }
     });
+    
     // Function to update the txtAmorTotal, txtPowerTotal and txtMoveTotal fields
     function updateFields() {
         let unit_type = document.getElementById('unit_type').value;
@@ -74,17 +82,13 @@ $(document).ready(function () {
         let actionUpgradeVal = parseInt($('#txtActionUpgrade').val());
         let mindUpgradeVal = parseInt($('#txtMindUpgrade').val());
         let size = parseInt($('#structure_size').val());
-
+        
         $('#txtAmorTotal').val(amorUpgradeVal <= 0 ? '1d6' : (parseInt(amorUpgradeVal) + 'd10'));
         // Update txtPowerTotal
-        var powerTotal = (2 + parseInt(powerUpgradeVal));
+        let powerTotal = (2 + parseInt(powerUpgradeVal));
         $('#txtPowerTotal').val(powerTotal + 'x');
 
-        // Calculate txtPowerAvailable specifically
-        var txtPowerTotalValue = $('#txtPowerTotal').val();
-        var powerTotalNumeric = parseFloat(txtPowerTotalValue.substring(0, txtPowerTotalValue.length)); // remove 'x' from string
-        var txtPowerAvailable = powerTotalNumeric * size;
-        $('#txtPowerAvailable').val(txtPowerAvailable);
+        PowerCalc();
 
         let moveTotalValue;
         if (moveUpgradeVal == 1) {
@@ -127,10 +131,11 @@ $(document).ready(function () {
                 newSize = size * 0.25;
                 $('#txtValueUpgrade').val(size * 2 - newSize * 4); //new valueUpgrade formula
             }
-
+            
             $('#structure_cost').val(newSize);
             $('#txtValueTotal').val(newSize);
         }
+        
     }
 
     // Attach event handlers to all the upgrade inputs
@@ -159,23 +164,79 @@ $(document).ready(function () {
             $(this).data('previousValue', newValue);
             $('#u_inches').val(u_inches);
             updateFields();
+            moc.structure.getArmorRating();
+            calculate();
         });
     });
+
+    function calculateValueImpairment() {
+        let valueImpairment = parseInt($("#value_impairmentCheck").val()) || 0;
+    
+        if($("#armor_impairmentCheck").is(":checked")) {
+            valueImpairment++;
+        }
+    
+        if($("#power_impairmentCheck").is(":checked")) {
+            valueImpairment++;
+        }
+    
+        if($("#speed_impairmentCheck").is(":checked")) {
+            valueImpairment++;
+        }
+    
+        if($("#action_impairmentCheck").is(":checked")) {
+            valueImpairment++;
+        }
+    
+        return valueImpairment;
+    }
+    
+    $("#armor_impairmentCheck, #power_impairmentCheck, #speed_impairmentCheck, #action_impairmentCheck").change(function() {
+        let valueImpairment = calculateValueImpairment();
+    
+        // get original size
+        let size = parseInt($('#structure_size').val());
+    
+        // get the current u_inches value
+        let uinches = parseInt($('#u_inches').val());
+    
+        // Calculate the new u_inches value
+        let new_uinches = uinches + 1;
+    
+        if (!this.checked) {
+            valueImpairment--;
+            new_uinches = uinches - 1;
+        }
+    
+        // add the impairment to the existing total value and structure cost
+        $('#txtValueTotal').val(size + valueImpairment);
+        $('#structure_cost').val(size + valueImpairment);
+        $('#u_inches').val(new_uinches);
+    
+        // store the new valueImpairment as the previousValue
+        $("#value_impairmentCheck").data('previousValue', valueImpairment);
+    });
+
     // When armor_impairmentCheck state changes
     $("#armor_impairmentCheck").change(function () {
         if (this.checked) {
-            $('#txtAmorTotal').val('0'); 
+            $('#txtAmorTotal').val('0');
+            moc.structure.getArmorRating('0');
+            calculate();
         } else {
             // ... call the function which calculates the normal armor value
+            moc.structure.getArmorRating();
             updateFields();
+            calculate();
         }
     });
 
     // When power_impairmentCheck state changes
     $("#power_impairmentCheck").change(function () {
         if (this.checked) {
-            var powerTotalString = $('#txtPowerAvailable').val();
-            var powerTotal = parseFloat(powerTotalString) / 2; // cut in half
+            //let powerTotalString = $('#txtPowerAvailable').val();
+            //let powerTotal = parseFloat(powerTotalString) / 2; // cut in half
+            let powerTotal= parseInt($('#structure_size').val());
             $('#txtPowerAvailable').val(powerTotal);
         } else {
             // ... call the function which calculates the normal power value
@@ -183,7 +244,7 @@ $(document).ready(function () {
         }
     });
 
-    var half_speed_flag = false;
+    let half_speed_flag = false;
 
     // When speed_impairmentCheck state changes
     $("#speed_impairmentCheck").change(function () {
@@ -194,7 +255,7 @@ $(document).ready(function () {
         }
     });
 
-    var half_minded_flag = false;
+    let half_minded_flag = false;
 
     // When action_impairmentCheck state changes
     $("#action_impairmentCheck").change(function () {
@@ -204,5 +265,31 @@ $(document).ready(function () {
             half_minded_flag = false;
         }
     });
+    $("#value_impairmentCheck").data('previousValue', 0); // Initialize the previous value for value_impairmentCheck
 
+    $("#value_impairmentCheck").on('input', function () {
+        // convert to integer, or use 0 if NaN
+        let valueImpairment = parseInt($(this).val()) || 0;
+        let previousValueImpairment = $(this).data('previousValue'); // get the previous value
+
+        // get original size
+        let size = parseInt($('#structure_size').val());
+
+        // get the current u_inches value
+        let uinches = parseInt($('#u_inches').val());
+
+        // Calculate the new u_inches value depending on whether valueImpairment increased or decreased.
+        let new_uinches = (valueImpairment > previousValueImpairment) ?
+            uinches + (valueImpairment - previousValueImpairment) :
+            uinches - (previousValueImpairment - valueImpairment);
+
+        // add the impairment to the existing total value and structure cost
+        $('#txtValueTotal').val(size + valueImpairment);
+        $('#structure_cost').val(size + valueImpairment);
+        $('#u_inches').val(new_uinches);
+
+        // store the new valueImpairment as the previousValue
+        $(this).data('previousValue', valueImpairment);
+        calculate();
+    });
 });

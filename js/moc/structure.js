@@ -30,17 +30,34 @@ class Structure {
 			}
 			// round to halves
 			this.structureLevel = Math.round(2 * this.structureLevel) / 2.0;
-			this.cost = this.size;
+			
+			let valueUpgradeVal = $('#txtValueUpgrade').val();
+			
+			let size = parseInt($('#structure_size').val());
+
+			if (valueUpgradeVal <= 0) {
+				this.cost = this.size;
+			} else {
+				let newSize = size - 0.5 * valueUpgradeVal;
+				if (newSize < size * 0.25) {
+					newSize = size * 0.25;
+				}
+				this.cost = newSize;
+			}
 		};
 
 		this.applyFrom = function (form) {
 			this.size = form.structure_size.value;
 			this.customArmor = form.custom_armor.checked;
 
-			if (!this.customArmor) {
+			if (!this.customArmor && !document.getElementById('enhanced_attr').checked) {
 				this.structureLevel = form.structure_level.options[form.structure_level.selectedIndex].value;
 				this.armor = this.getArmorByStructureLevel(this.structureLevel);
 				this.armorText = form.structure_level.options[form.structure_level.selectedIndex].innerHTML;
+			} else if (!this.customArmor && document.getElementById('enhanced_attr').checked){
+				this.structureLevel = $('#txtAmorUpgrade').val();
+				this.armor = this.getArmorByStructureLevel(this.structureLevel);
+				this.armorText = $('#txtAmorUpgrade').val();
 			} else {
 				this.armorText = form.armor.value;
 				this.armor = this.getArmorByArmorText(this.armorText);
@@ -84,9 +101,17 @@ class Structure {
 			if (this.customArmor) {
 				return this.armorText;
 			} else {
-				if (typeof lvl === "undefined")
+				if (typeof lvl === "undefined" && !document.getElementById('enhanced_attr').checked)
 					lvl = this.structureLevel;
-
+				if (typeof lvl === "undefined" && document.getElementById('enhanced_attr').checked){
+					if ($('#txtAmorUpgrade').val() != 0 && !document.getElementById('armor_impairmentCheck').checked) {
+						lvl = $('#txtAmorUpgrade').val();
+					} else if ($('#txtAmorTotal').val() === '1d6') {
+						lvl = 0.5;
+					} else if ($('#txtAmorTotal').val() === '0') {
+						lvl = 0;
+					}
+				}
 				if (lvl == 0) return "0";
 				else if (lvl == 0.5) return "1d6";
 				else return lvl + "d10";

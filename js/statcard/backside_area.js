@@ -79,7 +79,13 @@ class BacksideArea {
 					var effSizeText = moc.structure.size - i;
 					table.addColumn(effSizeText, attr.wdtSize);
 
-					var arText = moc.structure.getArmorRating(Math.min(moc.structure.structureLevel, moc.structure.size - i));
+					if(!document.getElementById('enhanced_attr').checked){
+						var arText = moc.structure.getArmorRating(Math.min(moc.structure.structureLevel, moc.structure.size - i));
+					} else if($('#txtAmorUpgrade').val() > 0 && !document.getElementById('armor_impairmentCheck').checked) {
+						var arText = moc.structure.getArmorRating(Math.min($('#txtAmorUpgrade').val(), moc.structure.size - i));
+					} else {
+						var arText = moc.structure.getArmorRating();
+					}
 
 					var armorDiff = moc.structure.strictireLevel - (moc.structure.size - i);
 					var armorRed = armorDiff > 0 ? 128 + armorDiff * 32 : 0;
