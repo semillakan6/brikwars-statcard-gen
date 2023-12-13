@@ -30,38 +30,74 @@ class AttributesArea {
         };
 
 
-        const getSpeedTexts = () => {
-            const { speed: ground } = moc.groundPropulsion;
-            const { speed: fly } = moc.flyingPropulsion;
-            const { speed: thrust } = moc.thrustPropulsion;
-            let speedText = "-", speedSubText;
-
-            if (!(thrust || fly || ground)) {
-                speedText = "-";
-            } else if (!!ground + !!fly + !!thrust === 1) {
-                if (ground) {
-                    speedText = ground;
-                } else if (fly) {
-                    speedText = fly;
-                    speedSubText = "Flying";
-                } else {
-                    speedText = thrust;
-                    speedSubText = "Thrust";
+        const handleSingleSource = (sources) => {
+            for (const key in sources) {
+                if (sources[key]) {
+                    return {
+                        speedText: sources[key],
+                        speedSubText: key === 'ground' ? null : key.charAt(0).toUpperCase() + key.slice(1),
+                    };
                 }
-            } else if (ground && (fly || thrust)) {
-                speedText = ground;
-                if (fly && thrust) {
-                    speedSubText = "(Fly: " + fly + ", Thrust: " + thrust + ")";
-                } else if (fly) {
-                    speedSubText = "(Flying: " + fly + ")";
-                } else {
-                    speedSubText = "(Thrust: " + thrust + ")";
-                }
-            } else if (thrust && fly) {
-                speedText = fly;
-                speedSubText = "Flying (Thrust: " + thrust + ")";
             }
-            return { speed: speedText, speedSub: speedSubText };
+        };
+        
+        const handleMultipleSources = (sources) => {
+            let { ground, fly, thrust } = sources;
+        
+            if (ground) {
+                return {
+                    speedText: ground,
+                    speedSubText: fly && thrust ? `(Fly: ${fly}, Thrust: ${thrust})` : fly ? `(Flying: ${fly})` : `(Thrust: ${thrust})`,
+                };
+            } else if (thrust && fly) {
+                return {
+                    speedText: fly,
+                    speedSubText: `Flying (Thrust: ${thrust})`,
+                };
+            }
+        };
+        
+        const checkPropulsion = (propulsion) => {
+            let sources = { ground: propulsion.ground, fly: propulsion.flying, thrust: propulsion.thrust };
+            let truths = Object.values(sources).filter(Boolean).length;
+        
+            if (truths === 0) {
+                return { speedText: '-', speedSubText: null };
+            } else if (truths === 1) {
+                return handleSingleSource(sources);
+            } else {
+                return handleMultipleSources(sources);
+            }
+        };
+        
+        const getSpeedTexts = () => {
+            let ground, flying, thrust;
+
+			if (document.getElementById('enhanced_attr').checked) {
+                if ($("#unit_type").val() == 'flying_machine') {
+                    ground = 0;
+                    flying = parseInt($('#txtMoveTotal').val());
+                } else {
+                    ground = parseInt($('#txtMoveTotal').val());
+                    flying = 0;
+                }
+            } else {
+                ground = moc.groundPropulsion.speed;
+                flying = moc.flyingPropulsion.speed;
+            }
+            thrust = handleThrusterType(moc.thrustPropulsion.speed);
+            const propulsion = {
+                ground: ground,
+                flying: flying,
+                thrust: thrust,
+            };
+        
+            let { speedText, speedSubText } = checkPropulsion(propulsion);
+        
+            return {
+                speed: speedText,
+                speedSub: speedSubText,
+            };
         };
 
         this.drawMove = (ctx, i) => {
@@ -97,29 +133,48 @@ class AttributesArea {
 			this.drawSubtexts(ctx, fields, i, subTextOffset);
 		};
 		
-		this.drawSkill = (ctx, i) => {
-			this.drawTitleText(ctx, "Skill", i);
-		
-			let skillText = "-", halfMindText, incompetentText;
-			if (moc.mind.active) {
-				skillText = mind_types[moc.mind.mindTypeId].skill;
-				if (moc.mind.isHalfMind) {
-					halfMindText = halfmind_types[moc.mind.halfmindTypeId].name;
-				}
-				if (mind_types[moc.mind.mindTypeId].isIncompetent) {
-					incompetentText = mind_types[moc.mind.mindTypeId].name;
-				}
-			}
-		
-			const fields = moc.specialities.getSkillFieldTexts();
-			if (halfMindText) fields.unshift(halfMindText);
-			if (incompetentText) fields.unshift(incompetentText);
-		
-			const subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
-		
-			this.drawValueText(ctx, skillText, i, subTextOffset);
-			this.drawSubtexts(ctx, fields, i, subTextOffset);
-		};
+		const getSkillText = () => {
+            if (!moc.mind.active) {
+                return "-";
+            }
+            return mind_types[moc.mind.mindTypeId].skill;
+        };
+        
+        const getHalfMindText = () => {
+            if (moc.mind.isHalfMind) {
+                return halfmind_types[moc.mind.halfmindTypeId].name;
+            }
+            return null;
+        };
+        
+        const getIncompetentText = () => {
+            if (mind_types[moc.mind.mindTypeId].isIncompetent) {
+                return mind_types[moc.mind.mindTypeId].name;
+            }
+            return null;
+        };
+        
+        const getFields = (halfMindText, incompetentText) => {
+            const fields = moc.specialities.getSkillFieldTexts();
+            if (halfMindText) fields.unshift(halfMindText);
+            if (incompetentText) fields.unshift(incompetentText);
+            return fields;
+        };
+        
+        this.drawSkill = (ctx, i) => {
+            this.drawTitleText(ctx, "Skill", i);
+        
+            let skillText = getSkillText();
+            let halfMindText = getHalfMindText();
+            let incompetentText = getIncompetentText();
+        
+            let fields = getFields(halfMindText, incompetentText);
+        
+            const subTextOffset = -fields.length * statcard.layout.front.attributes.subtext.spacing / 4;
+        
+            this.drawValueText(ctx, skillText, i, subTextOffset);
+            this.drawSubtexts(ctx, fields, i, subTextOffset);
+        };
 
         this.drawSize = (ctx, i) => {
             this.drawTitleText(ctx, "Size", i);

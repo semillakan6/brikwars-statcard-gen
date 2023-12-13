@@ -113,7 +113,7 @@ class BacksideArea {
 						let powerUpgradeVal = $('#txtPowerUpgrade').val();
 						powerTotal = (2 + parseInt(powerUpgradeVal));
 
-						if ($("#unit_type").val() != 'flying_machine'){
+						if ($("#unit_type").val() != 'flying_machine') {
 							power = Math.max(1, parseInt($('#txtPowerAvailable').val()) - (i * powerTotal));
 						} else {
 							power = Math.max(1, parseInt($('#txtPowerAvailable').val()) - i);
@@ -145,59 +145,74 @@ class BacksideArea {
 			return table.y - ypos + attr.rowHeight;
 		};
 
+		// handlers for different types of speed
+		const speedHandlers = {
+			handleSingleSource: (ground, fly, thrust) => {
+				return ground ? ground :
+					fly ? `${fly} Flying` :
+						`${thrust} Thrust`;
+			},
+
+			handleGroundWithMore: (ground, fly, thrust) => {
+				let speedText = `${ground}`;
+				if (fly && thrust) {
+					speedText += ` (Fly: ${fly}, Thrust: ${thrust})`;
+				} else if (fly) {
+					speedText += ` (Flying: ${fly})`;
+				} else {
+					speedText += ` (Thrust: ${thrust})`;
+				}
+				return speedText;
+			},
+
+			handleThrustAndFly: (fly, thrust) => `${fly} Flying (Thrust: ${thrust})`
+		};
+
+		const getSpeedText = (ground, fly, thrust) => {
+			let truthCount = [ground, fly, thrust].filter(Boolean).length;
+			if (truthCount === 1) {
+				return speedHandlers.handleSingleSource(ground, fly, thrust);
+			}
+			if (ground && truthCount > 1) {
+				return speedHandlers.handleGroundWithMore(ground, fly, thrust);
+			}
+			if (thrust && fly) {
+				return speedHandlers.handleThrustAndFly(fly, thrust);
+			}
+			return null;
+		};
+
 		this.drawAttributesText = function (ctx, offset) {
 			ctx.font = this.font();
 			ctx.fillStyle = "black";
 
-			var basicAttr = "Size: " + moc.structure.size + ", " + "Armor: " + moc.structure.getArmorRating();
+			let basicAttr = `Size: ${moc.structure.size}, Armor: ${moc.structure.getArmorRating()}`;
 
-			var speedText;
-			var ground = moc.groundPropulsion.speed;
-			var fly = moc.flyingPropulsion.speed;
-			var thrust = moc.thrustPropulsion.speed;
+			let ground;
+			let fly;
+			let thrust = handleThrusterType(moc.thrustPropulsion.speed);
 
-			// only one
-			if (!!ground + !!fly + !!thrust == 1) {
-				if (ground) {
-					speedText = ground;
-				}
-				else if (fly) {
-					speedText = fly + " Flying";
-				}
+			if (document.getElementById('enhanced_attr').checked) {
+                if ($("#unit_type").val() == 'flying_machine') {
+                    ground = 0;
+                    fly = parseInt($('#txtMoveTotal').val());
+                } else {
+                    ground = parseInt($('#txtMoveTotal').val());
+                    fly = 0;
+                }
+            } else {
+                ground = moc.groundPropulsion.speed;
+                fly = moc.flyingPropulsion.speed;
+            }
 
-				else {
-					speedText = thrust + " Thrust";
-				}
+			let speedText = getSpeedText(ground, fly, thrust);
+			if (speedText) {
+				basicAttr += `, Move: ${speedText}`;
 			}
-
-			// ground + more
-			else if (ground && (fly || thrust)) {
-				speedText = ground;
-
-				if (fly && thrust) {
-					speedText += " (Fly: " + fly + ", Thrust: " + thrust + ")";
-				}
-				else if (fly) {
-					speedText += " (Flying: " + fly + ")";
-				}
-
-				else {
-					speedText += " (Thrust: " + thrust + ")";
-				}
+			if (moc.mind.active) {
+				basicAttr += `, Skill: ${mind_types[moc.mind.mindTypeId].skill}`;
 			}
-
-			// thrust + flying
-			else if (thrust && fly) {
-				speedText = fly + " Flying (Thrust: " + thrust + ")";
-			}
-
-			if (speedText)
-				basicAttr += ", Move: " + speedText;
-
-			if (moc.mind.active)
-				basicAttr += ", Skill: " + mind_types[moc.mind.mindTypeId].skill;
-
-			basicAttr += ", Power: " + moc.power;
+			basicAttr += `, Power: ${moc.power}`;
 
 			ctx.fillText(basicAttr, statcard.layout.back.x, offset, statcard.layout.back.wdt);
 
@@ -311,7 +326,18 @@ class BacksideArea {
 		};
 	}
 }
-
+function handleThrusterType(selectedThrusterType) {
+	switch (selectedThrusterType) {
+		case 1:
+			return 'd4';
+		case 2:
+			return 'd6';
+		case 3:
+			return 'd8';
+		case 4:
+			return 'd10';
+	}
+}
 function toRoman(val) {
 	if (val <= 0 || val >= 4000) return;
 
