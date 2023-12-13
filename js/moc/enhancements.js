@@ -8,7 +8,7 @@ function PowerCalc() {
     let txtPowerTotalValue = $('#txtPowerTotal').val();
     let powerTotal = parseFloat(txtPowerTotalValue.substring(0, txtPowerTotalValue.length)); //remove 'x' from string
     let txtPowerAvailable = powerTotal * parseInt($('#structure_size').val());
-    if($("#power_impairmentCheck").is(":checked")) {
+    if ($("#power_impairmentCheck").is(":checked")) {
         txtPowerAvailable = parseInt($('#structure_size').val()); // cut in half if power_impairmentCheck is checked
     }
     $('#txtPowerAvailable').val(txtPowerAvailable);
@@ -71,7 +71,7 @@ $(document).ready(function () {
             $(this).data("checked", false);
         }
     });
-    
+
     // Function to update the txtAmorTotal, txtPowerTotal and txtMoveTotal fields
     function updateFields() {
         let unit_type = document.getElementById('unit_type').value;
@@ -82,7 +82,7 @@ $(document).ready(function () {
         let actionUpgradeVal = parseInt($('#txtActionUpgrade').val());
         let mindUpgradeVal = parseInt($('#txtMindUpgrade').val());
         let size = parseInt($('#structure_size').val());
-        
+
         $('#txtAmorTotal').val(amorUpgradeVal <= 0 ? '1d6' : (parseInt(amorUpgradeVal) + 'd10'));
         // Update txtPowerTotal
         let powerTotal = (2 + parseInt(powerUpgradeVal));
@@ -126,16 +126,25 @@ $(document).ready(function () {
             $('#txtValueTotal').val(size);
             $('#structure_cost').val(size);
         } else {
-            let newSize = size - 0.5 * valueUpgradeVal;
-            if (newSize < size * 0.25) {
-                newSize = size * 0.25;
-                $('#txtValueUpgrade').val(size * 2 - newSize * 4); //new valueUpgrade formula
+
+            let valueUpgradeVal = parseFloat($('#txtValueUpgrade').val() || 0);
+            let valueImpairment = calculateValueImpairment();
+            let newSize;
+
+            if (valueUpgradeVal <= 0) {
+                newSize = size + valueImpairment;
+            } else {
+                newSize = size - 0.5 * valueUpgradeVal + valueImpairment;
+                if (newSize < size * 0.25) {
+                    newSize = size * 0.25;
+                    $('#txtValueUpgrade').val(2 * (size - newSize));
+                }
             }
-            
+
             $('#structure_cost').val(newSize);
             $('#txtValueTotal').val(newSize);
         }
-        
+
     }
 
     // Attach event handlers to all the upgrade inputs
@@ -171,48 +180,48 @@ $(document).ready(function () {
 
     function calculateValueImpairment() {
         let valueImpairment = parseInt($("#value_impairmentCheck").val()) || 0;
-    
-        if($("#armor_impairmentCheck").is(":checked")) {
+
+        if ($("#armor_impairmentCheck").is(":checked")) {
             valueImpairment++;
         }
-    
-        if($("#power_impairmentCheck").is(":checked")) {
+
+        if ($("#power_impairmentCheck").is(":checked")) {
             valueImpairment++;
         }
-    
-        if($("#speed_impairmentCheck").is(":checked")) {
+
+        if ($("#speed_impairmentCheck").is(":checked")) {
             valueImpairment++;
         }
-    
-        if($("#action_impairmentCheck").is(":checked")) {
+
+        if ($("#action_impairmentCheck").is(":checked")) {
             valueImpairment++;
         }
-    
+
         return valueImpairment;
     }
-    
-    $("#armor_impairmentCheck, #power_impairmentCheck, #speed_impairmentCheck, #action_impairmentCheck").change(function() {
+
+    $("#armor_impairmentCheck, #power_impairmentCheck, #speed_impairmentCheck, #action_impairmentCheck").change(function () {
         let valueImpairment = calculateValueImpairment();
-    
+
         // get original size
         let size = parseInt($('#structure_size').val());
-    
+
         // get the current u_inches value
         let uinches = parseInt($('#u_inches').val());
-    
+
         // Calculate the new u_inches value
         let new_uinches = uinches + 1;
-    
+
         if (!this.checked) {
             valueImpairment--;
             new_uinches = uinches - 1;
         }
-    
+
         // add the impairment to the existing total value and structure cost
-        $('#txtValueTotal').val(size + valueImpairment);
-        $('#structure_cost').val(size + valueImpairment);
+        //$('#txtValueTotal').val(size + valueImpairment);
+        //$('#structure_cost').val(size + valueImpairment);
         $('#u_inches').val(new_uinches);
-    
+
         // store the new valueImpairment as the previousValue
         $("#value_impairmentCheck").data('previousValue', valueImpairment);
     });
@@ -236,7 +245,7 @@ $(document).ready(function () {
         if (this.checked) {
             //let powerTotalString = $('#txtPowerAvailable').val();
             //let powerTotal = parseFloat(powerTotalString) / 2; // cut in half
-            let powerTotal= parseInt($('#structure_size').val());
+            let powerTotal = parseInt($('#structure_size').val());
             $('#txtPowerAvailable').val(powerTotal);
         } else {
             // ... call the function which calculates the normal power value
@@ -268,28 +277,25 @@ $(document).ready(function () {
     $("#value_impairmentCheck").data('previousValue', 0); // Initialize the previous value for value_impairmentCheck
 
     $("#value_impairmentCheck").on('input', function () {
-        // convert to integer, or use 0 if NaN
         let valueImpairment = parseInt($(this).val()) || 0;
-        let previousValueImpairment = $(this).data('previousValue'); // get the previous value
+        let previousValueImpairment = $(this).data('previousValue');
 
-        // get original size
-        let size = parseInt($('#structure_size').val());
+        // Use the value in txtValueTotal instead of size for calculation
+        let totalValue = parseFloat($('#txtValueTotal').val());
+        let newSize = totalValue - previousValueImpairment + valueImpairment;
 
-        // get the current u_inches value
         let uinches = parseInt($('#u_inches').val());
-
-        // Calculate the new u_inches value depending on whether valueImpairment increased or decreased.
         let new_uinches = (valueImpairment > previousValueImpairment) ?
             uinches + (valueImpairment - previousValueImpairment) :
             uinches - (previousValueImpairment - valueImpairment);
 
-        // add the impairment to the existing total value and structure cost
-        $('#txtValueTotal').val(size + valueImpairment);
-        $('#structure_cost').val(size + valueImpairment);
+        $('#txtValueTotal').val(newSize);
+        $('#structure_cost').val(newSize);
+        console.log($('#structure_cost').val());
         $('#u_inches').val(new_uinches);
 
-        // store the new valueImpairment as the previousValue
         $(this).data('previousValue', valueImpairment);
+
         calculate();
     });
 });

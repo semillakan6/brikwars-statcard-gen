@@ -79,9 +79,9 @@ class BacksideArea {
 					var effSizeText = moc.structure.size - i;
 					table.addColumn(effSizeText, attr.wdtSize);
 
-					if(!document.getElementById('enhanced_attr').checked){
+					if (!document.getElementById('enhanced_attr').checked) {
 						var arText = moc.structure.getArmorRating(Math.min(moc.structure.structureLevel, moc.structure.size - i));
-					} else if($('#txtAmorUpgrade').val() > 0 && !document.getElementById('armor_impairmentCheck').checked) {
+					} else if ($('#txtAmorUpgrade').val() > 0 && !document.getElementById('armor_impairmentCheck').checked) {
 						var arText = moc.structure.getArmorRating(Math.min($('#txtAmorUpgrade').val(), moc.structure.size - i));
 					} else {
 						var arText = moc.structure.getArmorRating();
@@ -103,10 +103,24 @@ class BacksideArea {
 						var moveText = Math.max(1, moc.thrustPropulsion.speed - i);
 						table.addColumn(moveText, attr.wdtThrust);
 					}
+					let power, powerText, powerTotal;
 
-					var power = Math.max(1, moc.structure.size - i);
-					if (!moc.flyingPropulsion.active) power *= 2;
-					var powerText = power*2; //Power scale
+					if (!document.getElementById('enhanced_attr').checked) {
+						power = Math.max(1, moc.structure.size - i);
+						if (!moc.flyingPropulsion.active) power *= 2;
+						powerText = power * 2; //Power scale
+					} else {
+						let powerUpgradeVal = $('#txtPowerUpgrade').val();
+						powerTotal = (2 + parseInt(powerUpgradeVal));
+
+						if ($("#unit_type").val() != 'flying_machine'){
+							power = Math.max(1, parseInt($('#txtPowerAvailable').val()) - (i * powerTotal));
+						} else {
+							power = Math.max(1, parseInt($('#txtPowerAvailable').val()) - i);
+						}
+
+						powerText = power;
+					}
 
 					var powerDiff = moc.powerUsage - power;
 					var powerRed = powerDiff > 0 ? 128 + powerDiff * 32 : 0;
@@ -298,59 +312,51 @@ class BacksideArea {
 	}
 }
 
-function toRoman(val)
-{	
-	if(val <= 0 || val >= 4000) return;
+function toRoman(val) {
+	if (val <= 0 || val >= 4000) return;
 
 	var result = "";
-	var roman = [ "M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"];
-	var decimal = [ 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 ];
-	
-	for( var i=0; i<roman.length; ++i)
-	{
-		while(val >= decimal[i])
-		{
+	var roman = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+	var decimal = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+
+	for (var i = 0; i < roman.length; ++i) {
+		while (val >= decimal[i]) {
 			val -= decimal[i];
 			result += roman[i];
 		}
 	}
-	
+
 	return result;
 }
 
-function wrapText(context, text, x, y, maxWidth, lineHeight)
-{
-	if(!text || text.length == 0) return 0;
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+	if (!text || text.length == 0) return 0;
 
 	var lines = text.split('\n');
 	var offset = 0;
-	
-	for(var i=0; i<lines.length; ++i)
-	{
+
+	for (var i = 0; i < lines.length; ++i) {
 		var lineText = lines[i];
-	
+
 		var words = lineText.split(' ');
 		var line = '';
 
-		for(var n = 0; n < words.length; n++)
-		{
+		for (var n = 0; n < words.length; n++) {
 			var testLine = line + words[n] + ' ';
 			var metrics = context.measureText(testLine);
 			var testWidth = metrics.width;
-			if (testWidth > maxWidth && n > 0)
-			{
+			if (testWidth > maxWidth && n > 0) {
 				context.fillText(line, x, y + offset, maxWidth);
 				line = words[n] + ' ';
 				offset += lineHeight;
 			}
-			else
-			{
+			else {
 				line = testLine;
 			}
 		}
 		context.fillText(line, x, y + offset, maxWidth);
 		offset += lineHeight;
-	
+
 	}
 	return offset;
 }

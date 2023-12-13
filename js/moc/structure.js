@@ -38,11 +38,7 @@ class Structure {
 			if (valueUpgradeVal <= 0) {
 				this.cost = this.size;
 			} else {
-				let newSize = size - 0.5 * valueUpgradeVal;
-				if (newSize < size * 0.25) {
-					newSize = size * 0.25;
-				}
-				this.cost = newSize;
+				this.cost = $('#structure_cost').val();
 			}
 		};
 

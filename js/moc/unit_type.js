@@ -78,6 +78,7 @@ $(document).ready(function () {
                 break;
             case 'flying_machine':
                 setSelectedValues('2', false, false, '', '0.5', false, true, 0, 5);
+                $('#power_impairmentCheck').prop('checked', true).change();
                 break;
         }
     }
