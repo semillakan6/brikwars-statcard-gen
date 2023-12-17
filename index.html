@@ -376,17 +376,19 @@
 																			<div class="content">
 																				<div class="icon"></div>
 																				<span>Action</span>
-																				<div class="input-group p-3">
+																				<div
+																					class="input-group input-group-sm p-3">
 																					<input type="text"
 																						class="form-control"
 																						id="txtActionTotal"
 																						name="txtActionTotal"
-																						placeholder="1d6" disabled>
+																						placeholder="1d6" value="1d6" disabled>
 																					<span
 																						class="input-group-text">Action
-																						Dice</span>
+																					</span>
 																				</div>
-																				<div class="input-group p-3">
+																				<div
+																					class="input-group input-group-sm p-3">
 																					<input type="text"
 																						class="form-control"
 																						id="txtMindTotal"
@@ -641,6 +643,106 @@
 												</tbody>
 											</table>
 										</div>
+										<div class="table-responsive" id="mind_table">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="2">Mind</th>
+														<th style="width: 40pt"></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td colspan="2">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox"
+																	id="mind"
+																	onchange="calculate(); updateTitleImage()">
+																<label class="form-check-label" for="mind">Has an own
+																	mind</label>
+															</div>
+															<small class="text-muted">The creation is a creature, robot
+																or other construct that can
+																act independently without a pilot. (<a target="_blank"
+																	href="http://www.brikwars.com/rules/2010/10#1.htm">Chapter
+																	10: Minds</a>)
+															</small>
+														</td>
+														<td class="cost"></td>
+													</tr>
+												</tbody>
+												<tbody id="mind_more">
+													<tr>
+														<th scope="col" style="width:80pt">Skill</th>
+														<td>
+															<select class="form-select" name="skill"
+																onchange="calculate();">
+															</select>
+															<div class="example" id="skill_example"></div>
+														</td>
+														<td class="cost"></td>
+													</tr>
+													<tr>
+														<th scope="col">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox"
+																	id="halfmind" onchange="calculate();">
+																<label class="form-check-label" for="halfmind">Half
+																	Mind</label>
+															</div>
+														</th>
+														<td>
+															<select class="form-select" name="halfmind_type"
+																onchange="calculate();" disabled>
+															</select>
+															<div class="example" id="halfmind_example"></div>
+															<div class="help" id="halfmind_help"></div>
+														</td>
+														<td class="cost">
+															<input type="hidden" class="form-control" name="skill_cost"
+																size="1" disabled>
+														</td>
+													</tr>
+													<tr id="program_container" style="display:none">
+														<th scope="col">Program</th>
+														<td>
+															<textarea class="form-control" name="program"
+																onchange="calculate();"></textarea>
+															<small class="text-muted">
+																Optionally specify the program here. It must be fairly
+																specific:
+																“Move to the nearest wounded allies and attempt to heal
+																them” or
+																“Stay close to the nearest allied troops and fire at
+																enemy combatants” are fine behaviors;
+																“Defeat all enemies” and “Win the battle” are not.
+															</small>
+														</td>
+														<td class="cost"></td>
+													</tr>
+													<tr>
+														<th scope="col">Extra Minds</th>
+														<td>
+															<input type="number" class="form-control" name="extra_minds"
+																min="0" step="1" onchange="calculate();">
+															<small class="text-muted">
+																Give the unit one or more extra Minds of the same kind
+																as adjusted above which gives it an extra
+																Action for each extra Mind. The same weapon, hand, or
+																equipment item still cannot be used for more
+																than one Action in one turn. Create a separate stat card
+																if you need several different minds for
+																your creation.
+															</small>
+														</td>
+														<td class="cost">
+															<input type="hidden" class="form-control"
+																name="extra_minds_cost" size="1" disabled>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
 										<div class="table-responsive" id="weapon_table">
 											<table class="table table-hover">
 												<thead>
@@ -756,115 +858,6 @@
 												</tr>
 											</tbody>
 										</table>
-
-										<table>
-											<thead>
-												<tr>
-													<th colspan="2">Mind</th>
-													<th style="width: 40pt">Cost</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td colspan="2">
-														<input type="checkbox" name="mind"
-															onchange="calculate(); updateTitleImage()" /> Has
-														an own mind
-														<div class="help">The creation is a creature, robot or other
-															construct that can act
-															independently without a pilot. (<a target="_blank"
-																class="ref"
-																href="http://www.brikwars.com/rules/2010/10#1.htm">Chapter
-																10: Minds</a>)
-														</div>
-													</td>
-													<td>
-													</td>
-												</tr>
-											</tbody>
-											<tbody id="mind_more">
-												<tr>
-													<th style="width:80pt">Skill</th>
-													<td>
-														<select name="skill" onchange="calculate();"
-															onkeyup="calculate(); "
-															onmousemove="moc.mind.updateHelp(document.forms[0]);">
-														</select>
-														<div class="example" id="skill_example"></div>
-													</td>
-													<td class="cost">
-													</td>
-												</tr>
-												<tr>
-													<th>
-														<input type="checkbox" name="halfmind"
-															onchange="calculate();" />
-														Half Mind
-													</th>
-													<td>
-														<select name="halfmind_type" onchange="calculate();"
-															onkeyup="calculate();"
-															onmousemove="moc.mind.updateHelp(document.forms[0]);"
-															disabled="disabled">
-														</select>
-														<div class="example" id="halfmind_example"></div>
-														<div class="help" id="halfmind_help"></div>
-													</td>
-													<td class="cost">
-														<input type="text" name="skill_cost" size="1"
-															disabled="disabled" />
-													</td>
-												</tr>
-												<tr id="program_container" style="display:none">
-													<th>
-														Program
-													</th>
-													<td>
-														<textarea name="program" style="width: 320pt"
-															onchange="calculate();" onkeyup="calculate();"></textarea>
-														<div class="help">Optionally specify the program here. It must
-															be
-															fairly specific:
-															“Move to the nearest wounded allies and attempt to heal
-															them” or
-															“Stay close to
-															the nearest allied troops and fire at enemy combatants” are
-															fine
-															behaviors;
-															“Defeat all enemies” and “Win the battle” are not. </div>
-													</td>
-													<td class="cost">
-													</td>
-												</tr>
-												<tr>
-													<th>Extra Minds</th>
-													<td>
-														<input type="number" name="extra_minds" min="0" step="1"
-															size="1" onchange="calculate();" onkeyup="calculate();" />
-														<div class="help">Give the unit one or more extra Minds of the
-															same
-															kind as adjusted
-															above which gives it an extra Action for each extra Mind.
-															The
-															same weapon, hand,
-															or equipment item still cannot be used for more than one
-															Action
-															in one
-															turn.<br />
-															Create a seperate statcard if you need several different
-															minds
-															for your
-															creation.</div>
-													</td>
-													<td class="cost">
-														<input type="text" name="extra_minds_cost" size="1"
-															disabled="disabled" />
-													</td>
-												</tr>
-
-											</tbody>
-										</table>
-
 										<table>
 											<thead>
 												<tr>
@@ -876,7 +869,8 @@
 												<tr>
 													<td colspan="5">
 														<input type="checkbox" name="supernatural"
-															onchange="moc.superNatural.addIfEmpty(); calculate();" /> Is
+															onchange="moc.superNatural.addIfEmpty(); calculate();" />
+														Is
 														SuperNatural
 														<div class="help">Embodies a SuperNatural Cliché: A Wizard,
 															Super
@@ -906,7 +900,8 @@
 															value="+" onclick="moc.superNatural.add(); calculate();" />
 														<div class="help">A SuperNaturally-powered unit measures the
 															strength of its
-															abilities by the SuperNatural Dice under its control.</div>
+															abilities by the SuperNatural Dice under its control.
+														</div>
 													</td>
 												</tr>
 											</tbody>
@@ -947,9 +942,11 @@
 																			onchange="changeLayout()"
 																			onkeyup="changeLayout()"
 																			aria-label="Statcard format">
-																			<option value="classic">Classic (2.75 x 3.0
+																			<option value="classic">Classic (2.75 x
+																				3.0
 																				in)</option>
-																			<option value="poker">Poker (2.5 x 3.5 in)
+																			<option value="poker">Poker (2.5 x 3.5
+																				in)
 																			</option>
 																		</select>
 																	</div>
@@ -1025,7 +1022,8 @@
 																		</td>
 																		<td>
 																			<img src="images/printprofessionally.jpg" />
-																			<div>Two separate files for front and back,
+																			<div>Two separate files for front and
+																				back,
 																				with
 																				bleed.</div>
 																		</td>
@@ -1055,7 +1053,8 @@
 															<button type="button" class="btn btn-outline-dark"
 																onclick="printStatcard()">Print Statcard</button>
 															<button type="button" class="btn btn-outline-dark"
-																onclick="openDownload()">Download Statcard</button></a>
+																onclick="openDownload()">Download
+																Statcard</button></a>
 														</th>
 													</tr>
 													<tr>
@@ -1117,11 +1116,14 @@
 																			class="col-sm-2 col-form-label">Title
 																			Picture</label>
 																		<div class="col-sm-10">
-																			<small class="form-text text-muted">You can
+																			<small class="form-text text-muted">You
+																				can
 																				zoom in with the
-																				scrollwheel and move the picture around
+																				scrollwheel and move the picture
+																				around
 																				with
-																				the mouse. The image size should be at
+																				the mouse. The image size should be
+																				at
 																				least
 																				412x412 pixels for the classic or
 																				520x700
@@ -1137,9 +1139,11 @@
 																		<label for="moc_image2"
 																			class="col-sm-2 col-form-label">Watermark</label>
 																		<div class="col-sm-10">
-																			<small class="form-text text-muted">Same as
+																			<small class="form-text text-muted">Same
+																				as
 																				for
-																				title picture, only drop on the right
+																				title picture, only drop on the
+																				right
 																				side
 																				of the statcard.</small>
 																			<input type="file"
@@ -1181,7 +1185,8 @@
 																					checked="checked"
 																					onchange="statcard.drawForeground()">
 																				<label class="form-check-label"
-																					for="statcard_damagetable">Display a
+																					for="statcard_damagetable">Display
+																					a
 																					table denoting the effects the
 																					damage
 																					taken has on the construction
@@ -1209,7 +1214,8 @@
 										</p>
 
 										<p>The statcards generated here can be redistributed under the <a
-												href="https://brikwars.com/rules/2020/legal.htm#fairuse">same conditions
+												href="https://brikwars.com/rules/2020/legal.htm#fairuse">same
+												conditions
 												as
 												the
 												official BrikWars

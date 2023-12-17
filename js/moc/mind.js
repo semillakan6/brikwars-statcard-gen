@@ -1,64 +1,66 @@
 
-var mind_types = 
-[
-	{
-		name: "Incompetent",
-		skill: "1d4",
-		cost: 0,
-		isIncompetent: true,
-		example: "zombie or civilian"
-	},
-	{
-		name: "Trained",
-		skill: "1d6",
-		cost: 0,
-		example: "standard trooper"
-	},
-	{
-		name: "Expert",
-		skill: "1d8",
-		cost: 0,
-		example: "specialist, officer or veteran"
-	},
-	{
-		name: "Heroic",
-		skill: "1d10",
-		cost: 0,
-		example: "hero"
-	},
-	{
-		name: "Supernatural",
-		skill: "1d12",
-		cost: 0,
-		example: "demigod or immortal"
-	}
+class MindType {
+    constructor(name, skill, cost = 0, example) {
+        this.name = name;
+        this.skill = skill;
+        this.cost = cost;
+        this.example = example;
+    }
+}
+
+class HalfMindType extends MindType {
+    constructor(name, example, help, skill, cost, isIncompetent, isProgram) {
+        super(name, skill, cost, example);
+        this.isIncompetent = isIncompetent;
+        this.isProgram = isProgram;
+        this.help = help;
+    }
+}
+// Define the mind types
+const mind_types = [
+    new MindType("Select an Option...", "", 0, ""),
+    new MindType("Trained", "1d6", 0, "standard trooper"),
+    new MindType("Expert", "1d8", 0, "specialist, officer or veteran"),
+    new MindType("Heroic", "1d10", 0, "hero"),
+    new MindType("Supernatural", "1d12", 0, "demigod or immortal"),
 ];
 
-var halfmind_types = 
-[
-	{
-		name: "Submissive",
-		example: "horse or fanboy",
-		help: "Under an intelligent minifig's direction, it may act as intelligently as if it had a full Mind, but if abandoned, it reverts to whatever behavior seems appropriate."
-	},
-	{
-		name: "Subjugated",
-		example: "slave or schoolchild",
-		help: "Forced to cooperate against its will. As long as kept in its restrains, it must follow the orders of its captors, but if it is released, it will do whatever it can to prevent being enslaved again."
-	},
-	{
-		name: "Programmed",
-		isProgram: true,
-		example: "robot or mind-controlled victim",
-		help: "Follows a simple set of behaviors. It's given a list of behaviors at the beginning of the battle, and may only behave in accordance with those instructions."
-	}
+// Define the half mind types
+const halfmind_types = [
+   new HalfMindType(
+        "Incompetent",
+        "zombie or civilian",
+        "An Incompetent creature is similar to other full-Minded creatures...",
+        "1d4",
+        0,
+        true
+    ),
+    new HalfMindType(
+        "Submissive",
+        "horse or fanboy",
+        "Under an intelligent minifig's direction, it may act as intelligently..."
+    ),
+    new HalfMindType(
+        "Subjugated",
+        "slave or schoolchild",
+        "Forced to cooperate against its will. As long as kept in..." 
+    ),
+    new HalfMindType(
+        "Programmed",
+        "robot or mind-controlled victim",
+        "Follows a simple set of behaviors. It's given a list...",
+        undefined,
+        undefined,
+        false,
+        true
+    ),
 ];
 
 class Mind {
     constructor(moc) {
         this.moc = moc;
         this.active = false;
-        this.mindTypeId = 1;
+        this.mindTypeId = 0;
         this.isHalfMind = false;
         this.halfmindTypeId = 0;
         this.mindCost = 0;
@@ -69,7 +71,7 @@ class Mind {
     }
 
     createOption(val, typeObj, typeId, formField) {
-        var opt = document.createElement("option");
+        const opt = document.createElement("option");
         opt.value = val;
         opt.innerHTML = (typeId === 'mindTypeId') ? typeObj.skill + " (" + typeObj.name + ")" : typeObj.name;
         opt.selected = val == this[typeId];
@@ -77,13 +79,16 @@ class Mind {
         formField.appendChild(opt);
     }
 
+    generateOptions(typesArray, typeId, formField){
+        typesArray.forEach((type, index) => {
+            this.createOption(index, type, typeId, formField);
+        });
+    }
+
     init(form) {
-        mind_types.forEach((type, index) => {
-            this.createOption(index, type, 'mindTypeId', form.skill);
-        });
-        halfmind_types.forEach((type, index) => {
-            this.createOption(index, type, 'halfmindTypeId', form.halfmind_type);
-        });
+        this.generateOptions(mind_types, 'mindTypeId', form.skill);
+        this.generateOptions(halfmind_types, 'halfmindTypeId', form.halfmind_type);
+        
         let n = document.createElement("option");
         n.innerHTML = "-";
         form.halfmind_type.appendChild(n);
@@ -115,19 +120,39 @@ class Mind {
     }
 
     updateForm(form) {
+        this.updateFormMind(form);
+        this.updateFormSkill(form);
+        this.updateFormHalfMind(form);
+        this.updateFormExtraMinds(form);
+        this.updateProgram(form);
+        this.updateHelp(form);
+    }
+    
+    updateFormMind(form) {
         form.mind.checked = this.active;
         document.getElementById("mind_more").style.display = this.active ? "table-row-group" : "none";
+    }
+    
+    updateFormSkill(form) {
         form.skill.selectedIndex = this.mindTypeId;
+    }
+    
+    updateFormHalfMind(form) {
         form.halfmind.checked = this.isHalfMind;
         form.halfmind_type.disabled = !this.isHalfMind;
-        form.halfmind_type.options[3].style.display = this.isHalfMind ? "none" : "block";
+        form.halfmind_type.options[4].style.display = this.isHalfMind ? "none" : "block";
         this.isHalfMind ? form.halfmind_type.selectedIndex = this.halfmindTypeId : form.halfmind_type.selectedIndex = 3;
         document.getElementById("program_container").style.display = this.isHalfMind && halfmind_types[this.halfmindTypeId].isProgram ? "table-row" : "none";
+    }
+    
+    updateFormExtraMinds(form) {
         form.extra_minds.value = this.extraMinds;
         form.extra_minds_cost.value = this.extraMindsCost;
         form.skill_cost.value = this.mindCost;
+    }
+    
+    updateProgram(form) {
         form.program.value = this.program;
-        this.updateHelp(form);
     }
 
     updateHelp(form) {

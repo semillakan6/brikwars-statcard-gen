@@ -134,26 +134,33 @@ class AttributesArea {
 		};
 		
 		const getSkillText = () => {
-            if (!moc.mind.active) {
+            if (!moc.mind.active && !document.getElementById('enhanced_attr').checked) {
                 return "-";
+            }
+            if (document.getElementById('enhanced_attr').checked && !document.getElementById('action_impairmentCheck').checked) {
+                
+                return document.getElementById('txtActionTotal').value;
+            }
+            if (moc.mind.isHalfMind && halfmind_types[moc.mind.halfmindTypeId] && halfmind_types[moc.mind.halfmindTypeId].name === "Incompetent") {
+                return halfmind_types[moc.mind.halfmindTypeId].skill;
             }
             return mind_types[moc.mind.mindTypeId].skill;
         };
         
         const getHalfMindText = () => {
-            if (moc.mind.isHalfMind) {
+            if (moc.mind.isHalfMind && halfmind_types[moc.mind.halfmindTypeId] && halfmind_types[moc.mind.halfmindTypeId].name !== "Incompetent") {
                 return halfmind_types[moc.mind.halfmindTypeId].name;
             }
             return null;
         };
         
         const getIncompetentText = () => {
-            if (mind_types[moc.mind.mindTypeId].isIncompetent) {
-                return mind_types[moc.mind.mindTypeId].name;
+            if (moc.mind.isHalfMind && halfmind_types[moc.mind.halfmindTypeId] && halfmind_types[moc.mind.halfmindTypeId].isIncompetent) {
+                return halfmind_types[moc.mind.halfmindTypeId].name;
             }
             return null;
         };
-        
+
         const getFields = (halfMindText, incompetentText) => {
             const fields = moc.specialities.getSkillFieldTexts();
             if (halfMindText) fields.unshift(halfMindText);
@@ -175,7 +182,7 @@ class AttributesArea {
             this.drawValueText(ctx, skillText, i, subTextOffset);
             this.drawSubtexts(ctx, fields, i, subTextOffset);
         };
-
+        
         this.drawSize = (ctx, i) => {
             this.drawTitleText(ctx, "Size", i);
             this.drawValueText(ctx, moc.structure.size, i, 0);

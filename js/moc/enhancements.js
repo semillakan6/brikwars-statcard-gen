@@ -270,12 +270,18 @@ $(document).ready(function () {
     $("#action_impairmentCheck").change(function () {
         if (this.checked) {
             half_minded_flag = true;
-            $('#txtActionTotal').val('1d4');
+            $('#txtActionTotal').val('1d6');
             $('#txtActionUpgrade').val('0').attr('disabled', true).change();
+            $('#txtMindUpgrade').val('0').attr('disabled', true).change();
+            $("#mind_table").show();
+            $("#mind").prop('checked', true).change();
         } else {
             half_minded_flag = false;
             $('#txtActionTotal').val('1d6');
             $('#txtActionUpgrade').val('0').attr('disabled', false).change();
+            $('#txtMindUpgrade').val('0').attr('disabled', false).change();
+            $("#mind_table").hide();
+            $("#mind").prop('checked', false).change();
         }
     });
     $("#value_impairmentCheck").data('previousValue', 0); // Initialize the previous value for value_impairmentCheck
