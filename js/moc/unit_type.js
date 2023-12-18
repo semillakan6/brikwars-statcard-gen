@@ -5,6 +5,7 @@ $(document).ready(function () {
     $("#enhancements").hide();
     $("#propulsion_table").show();
     $("#mind_table").show();
+    $("#skill_tr").hide();
 
     // Show the section based on the checked radio button on page load.
     let initialSelectedType = $("input[name='type_attr']:checked").val();
@@ -12,10 +13,12 @@ $(document).ready(function () {
         $("#amor_input").show();
         $("#propulsion_table").show();
         $("#mind_table").show();
+        $("#skill_tr").show();
     } else if (initialSelectedType == 'enhanced') {
         $("#enhancements").show();
         $("#propulsion_table").hide();
         $("#mind_table").hide();
+        $("#skill_tr").hide();
     }
 
     // This code handles the functionality for unit_type select dropdown irrespective of the radio button selected.
@@ -44,11 +47,13 @@ $(document).ready(function () {
             $("#amor_input").show();
             $("#propulsion_table").show();
             $("#mind_table").show();
+            $("#skill_tr").show();
             handleUnitType($("#unit_type").val());
         } else if (this.value == 'enhanced') {
             $("#enhancements").show();
             $("#propulsion_table").hide();
             $("#mind_table").hide();
+            $("#skill_tr").hide();
         }
     });
 

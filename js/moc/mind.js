@@ -30,7 +30,7 @@ const halfmind_types = [
    new HalfMindType(
         "Incompetent",
         "zombie or civilian",
-        "An Incompetent creature is similar to other full-Minded creatures...",
+        "An Incompetent creature is a full-Minded creature with poor skills or smarts. It has an Action d4 and can't go Over the Top. It can only get Bonus Action d4s on a Critical Success like other dice.",
         "1d4",
         0,
         true
@@ -38,18 +38,20 @@ const halfmind_types = [
     new HalfMindType(
         "Submissive",
         "horse or fanboy",
-        "Under an intelligent minifig's direction, it may act as intelligently..."
+        "A Submissive creature can think but likes to follow a master. With a smart minifig, it acts like a full Mind. Without one, it acts like an animal: wandering, hiding, or fighting.",
+        "1d6",
     ),
     new HalfMindType(
         "Subjugated",
         "slave or schoolchild",
-        "Forced to cooperate against its will. As long as kept in..." 
+        "Subjugated creatures are forced to obey by fear or chains, but want to escape and rebel. If they get free, they will do anything to avoid being Subjugated again. This could be fighting their captors, running away, or attacking their former masters.",
+        "1d6",
     ),
     new HalfMindType(
         "Programmed",
         "robot or mind-controlled victim",
-        "Follows a simple set of behaviors. It's given a list...",
-        undefined,
+        "A Programmed creature follows a list of specific behaviors in battle. It can’t act outside of those instructions. For example, ‘Heal nearby allies’ or ‘Fire at enemies near allies’ are Programmed behaviors; ‘Beat all enemies’ or ‘Win the battle’ are not.",
+        "1d6",
         undefined,
         false,
         true

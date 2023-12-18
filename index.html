@@ -672,7 +672,7 @@
 													</tr>
 												</tbody>
 												<tbody id="mind_more">
-													<tr>
+													<tr id="skill_tr">
 														<th scope="col" style="width:80pt">Skill</th>
 														<td>
 															<select class="form-select" name="skill"
@@ -790,40 +790,40 @@
 												</tfoot>
 											</table>
 										</div>
-										<table>
-											<thead>
-												<tr>
-													<th colspan="5">Extra Protection</th>
-													<th style="width: 40pt">Cost</th>
-												</tr>
-												<tr id="equipment_head">
-													<th style="width: 135pt">Type</th>
-													<th style="width: 40pt">Size</th>
-													<th style="width: 60pt">Strength</th>
-													<th>Effect</th>
-													<th style="width: 40pt"></th>
-													<th style="width: 40pt"></th>
-												</tr>
-											</thead>
-											<tbody id="equipment">
-											</tbody>
-											<tbody>
-												<tr>
-													<td colspan="5">
-														<input type="button" value="+"
-															onclick="moc.equipment.add(); calculate();" />
-													</td>
-													<td>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="5">Extra Protection</th>
+														<th style="width: 40pt"></th>
+													</tr>
+													<tr id="equipment_head">
+														<th scope="col" style="width: 135pt">Type</th>
+														<th scope="col" style="width: 40pt">Amount</th>
+														<th scope="col" style="width: 60pt">Strength</th>
+														<th scope="col">Effect</th>
+														<th scope="col" style="width: 40pt"></th>
+														<th scope="col" style="width: 40pt"></th>
+													</tr>
+												</thead>
+												<tbody id="equipment">
+												</tbody>
+												<tbody>
+													<tr>
+														<td colspan="5">
+															<button type="button" class="btn btn-sm btn-outline-dark" onclick="moc.equipment.add(); calculate();"><i class="fas fa-plus"></i></button>
+														</td>
+														<td></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
 
 										<table>
 											<thead>
 												<tr>
 													<th colspan="2">Custom Specialities / Equipment</th>
-													<th style="width: 40pt">Cost</th>
+													<th style="width: 40pt"></th>
 												</tr>
 											</thead>
 											<tbody id="specialities">

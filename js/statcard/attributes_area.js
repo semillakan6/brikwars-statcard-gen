@@ -122,8 +122,10 @@ class AttributesArea {
 		
 			const energyShield = moc.equipment.getEnergyShieldStrength();
 			const armorPlating = moc.equipment.hasArmorPlating();
+            const deflection = moc.equipment.hasDeflection();
 		
 			const fields = moc.specialities.getArmorFieldTexts();
+            if (deflection) fields.unshift("Deflection");
 			if (armorPlating) fields.unshift("Armor Plating");
 			if (energyShield > 0) fields.unshift(energyShield + "x Energy Shield");
 		
@@ -141,7 +143,7 @@ class AttributesArea {
                 
                 return document.getElementById('txtActionTotal').value;
             }
-            if (moc.mind.isHalfMind && halfmind_types[moc.mind.halfmindTypeId] && halfmind_types[moc.mind.halfmindTypeId].name === "Incompetent") {
+            if (document.getElementById('action_impairmentCheck').checked || moc.mind.isHalfMind && halfmind_types[moc.mind.halfmindTypeId]) {
                 return halfmind_types[moc.mind.halfmindTypeId].skill;
             }
             return mind_types[moc.mind.mindTypeId].skill;
@@ -169,7 +171,7 @@ class AttributesArea {
         };
         
         this.drawSkill = (ctx, i) => {
-            this.drawTitleText(ctx, "Skill", i);
+            this.drawTitleText(ctx, "Action", i);
         
             let skillText = getSkillText();
             let halfMindText = getHalfMindText();

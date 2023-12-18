@@ -5,7 +5,7 @@ let equipment_types = [
 		sizeCost: 1,
 		baseCost: 0,
 		usePower: true,
-		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation. (<a  target=\"_blank\" class=\"ref\" href=\"http://www.brikwars.com/rules/2010/8#5.htm\">Chapter 8: Field Hazards</a>)",
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/draft/f.htm#energyshields\">Chapter F: Field Hazards</a>)",
 	},
 	{
 		name: "Armor Plating",
@@ -14,7 +14,7 @@ let equipment_types = [
 		sizeCost: 1,
 		baseCost: 1,
 		armorPlate: true,
-		remark: "No aerial flight or alternate forms of Movement possible. The cost of Move inches is doubled. (<a  target=\"_blank\" class=\"ref\" href=\"http://www.brikwars.com/rules/2010/8#2.htm\">Chapter 8: Basic Weapons</a>)",
+		remark: "No aerial flight or alternate forms of Movement possible. The cost of Move inches is doubled. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/3.htm#bodyarmor\">Chapter 3: Minifig Weapons</a>)",
 	}
 ];
 
@@ -102,50 +102,63 @@ function Equipments(moc) {
 
 	function createSelectElement(index, equipmentTypes) {
 		const selectElement = document.createElement("select");
-
+	
 		selectElement.id = `equipment_${index}_type`;
 		selectElement.onchange = calculate;
 		selectElement.onkeyup = calculate;
-
+		// Add Bootstrap classes to the select element
+		selectElement.classList.add('form-select');
+	
 		equipmentTypes.forEach((equipmentType, i) => {
 			let option = document.createElement("option");
 			option.text = equipmentType.name;
 			option.value = i;
-
+	
 			selectElement.appendChild(option);
 		});
-
+	
 		return selectElement;
 	}
-
-
+	
+	
 	function createInputElement(type, index) {
 		const inputElement = document.createElement("input");
-
-		inputElement.type = "number";
-		inputElement.class = "form-control";
+		
+		if(type == 'notes'){
+			inputElement.type = "text";
+		} else {
+			inputElement.type = "number";
+		}
 		inputElement.id = `equipment_${index}_${type}`;
 		inputElement.min = 1;
 		inputElement.step = 1;
 		inputElement.size = 1;
 		inputElement.onkeyup = calculate;
 		inputElement.onchange = calculate;
-
+	
+		// Add Bootstrap classes to the input element. 'addClass' is jQuery, 'classList.add' is plain JS
+		inputElement.classList.add('form-control');
+	
 		return inputElement;
 	}
 
 
 	function createButton(index) {
-		const button = document.createElement("input");
-
+		const button = document.createElement("button");
+	
+		let icon = document.createElement("i");
+		icon.classList.add('fas', 'fa-times');  // Add FontAwesome icon classes
+	
+		button.appendChild(icon);               // Append icon to the button
+		
 		button.type = "button";
-		button.value = "X";
 		button.id = `equipment_${index}_remove`;
+		button.classList.add('btn', 'btn-outline-dark', 'btn-sm');  // Add Bootstrap classes
 		button.onclick = function () {
 			moc.equipment.remove(index);
 			calculate();
 		};
-
+	
 		return button;
 	}
 
@@ -203,7 +216,7 @@ function Equipments(moc) {
 
 		costInput.disabled = true;
 		costInput.size = 1;
-		costInput.type = "text";
+		costInput.type = "hidden";
 		costInput.id = `equipment_${index}_cost`;
 
 		costCell.appendChild(costInput);
@@ -293,6 +306,13 @@ function Equipments(moc) {
 
 			if (equipment.isArmorPlate())
 				return true;
+		}
+		return false;
+	};
+
+	this.hasDeflection = function () {
+		if (document.getElementById('deflectionCheck').checked) {
+			return true;
 		}
 		return false;
 	};

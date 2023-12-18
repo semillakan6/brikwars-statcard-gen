@@ -235,7 +235,7 @@ class BacksideArea {
 					for (var j = 0; j < eqTypes[i].length; ++j) {
 						var eq = eqTypes[i][j];
 						var comma = j == 0 ? "" : (j + 1 == eqTypes[i].length ? " and " : ", ");
-						desc += comma + "a size " + eq.size + " energy shield " + toRoman(eq.strength());
+						desc += comma + "" + eq.size + " energy shield projectors (" + toRoman(eq.strength()) + ")";
 						totalStrength += eq.strength();
 					}
 					desc += ", giving it a total of " + totalStrength + " energy shield dice to spend each turn.";
