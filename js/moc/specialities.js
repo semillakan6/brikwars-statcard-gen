@@ -144,7 +144,7 @@ let specialities_templates = {
   "Command Units": {
     officer: {
       name: "Coordination (1d6)",
-      name: "1d8 Coordination",
+      shortname: "1d8 Coordination",
       mention: "skill",
       description:
         "Can spend an Action to improve the Action Dice of his Squad mates by one die size, up to 1d8, for one combined Action",
@@ -152,7 +152,7 @@ let specialities_templates = {
     },
     leader: {
       name: "Inspiration (1d6)",
-      name: "1d8 Inspiration",
+      shortname: "1d8 Inspiration",
       mention: "skill",
       description:
         "Can spend an Action and use a Motivational Tool to grant a Specialty d6 Action re-roll or to add Specialty d6 to an attribute for a target unit or Squad",
