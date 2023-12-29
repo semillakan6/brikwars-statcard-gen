@@ -382,7 +382,8 @@
 																						class="form-control"
 																						id="txtActionTotal"
 																						name="txtActionTotal"
-																						placeholder="1d6" value="1d6" disabled>
+																						placeholder="1d6" value="1d6"
+																						disabled>
 																					<span
 																						class="input-group-text">Action
 																					</span>
@@ -811,7 +812,9 @@
 												<tbody>
 													<tr>
 														<td colspan="5">
-															<button type="button" class="btn btn-sm btn-outline-dark" onclick="moc.equipment.add(); calculate();"><i class="fas fa-plus"></i></button>
+															<button type="button" class="btn btn-sm btn-outline-dark"
+																onclick="moc.equipment.add(); calculate();"><i
+																	class="fas fa-plus"></i></button>
 														</td>
 														<td></td>
 													</tr>
@@ -819,45 +822,46 @@
 											</table>
 										</div>
 
-										<table>
-											<thead>
-												<tr>
-													<th colspan="2">Custom Specialities / Equipment</th>
-													<th style="width: 40pt"></th>
-												</tr>
-											</thead>
-											<tbody id="specialities">
-											</tbody>
-											<tbody>
-												<tr>
-													<td colspan="2">
-														<input type="button" value="+"
-															onclick="moc.specialities.add(); calculate();" />
-														with template
-														<select name="specialities_templates" onchange="calculate();"
-															onkeyup="calculate();">
-															<option value="">(none)</option>
-															<option value="hero">Heroic Ego</option>
-															<option value="rider">Riding</option>
-															<option value="pilot">Stunt Driving</option>
-															<option value="gunner">Gunnery</option>
-															<option value="mechanik">Mechanikal Aptitude</option>
-															<option value="heavy">Compensating</option>
-															<option value="stealth">Stealth</option>
-															<option value="pathfinder">Pathfinding</option>
-															<option value="tracker">Tracking</option>
-															<option value="medik">Medik</option>
-														</select>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th scope="col"></th>
+														<th scope="col" colspan="2">
+															Specialist / Custom Equipment
+															<a target="_blank" class="ref"
+																href="https://brikwars.com/rules/2020/s.htm">
+																Chapter S: Minifig Specialists
+															</a>
+														</th>
+														<th scope="col" style="width: 40pt"></th>
+													</tr>
+												</thead>
+												<tbody id="specialities">
+												</tbody>
+												<tbody>
+													<tr>
+														<td>
+															<button type="button" class="btn btn-sm btn-outline-dark"
+																onclick="moc.specialities.add(); calculate();"><i class="fas fa-plus"></i></button>
+														</td>
+														<td colspan="2">
+															<span>With template</span>
+															<select class="form-control" name="specialities_templates"
+																onchange="calculate();" onkeyup="calculate();">
+																
+															</select>
 
-														<div class="help">Specify and describe your own specialities and
-															equipment here.
-														</div>
-													</td>
-													<td>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+															<div class="alert alert-info mt-2">Specify and describe your
+																own specialities and equipment here.
+															</div>
+														</td>
+														<td>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
 										<table>
 											<thead>
 												<tr>
@@ -1209,29 +1213,36 @@
 												</thead>
 											</table>
 										</div>
-										<p> Check out the original repository on <a
-												href="https://github.com/westnordost/brikwars-statcard-generator">GitHub</a>.
-										</p>
+										<div class="container"> 
+											<script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+											<script type='text/javascript'>kofiwidget2.init('Want to buy me a coffee?', '#009917', 'I3I1SPFPB');kofiwidget2.draw();</script> 
 
-										<p>The statcards generated here can be redistributed under the <a
-												href="https://brikwars.com/rules/2020/legal.htm#fairuse">same
-												conditions
-												as
-												the
-												official BrikWars
-												material</a>. </p>
-										<div class="help text-black text-center">
-											<br />
-											&copy; Credits
-											<br />
-											2023-2024 Ruben Cuevas &lt;rcuemor@gmail.com&gt;
-											<br />
-											2014-2018 Tobias Zwick &lt;newton@westnordost.de&gt;
-											<br />
-											Poker card format statcard by Peter Sanderson,
-											Other artwork by Mike Rayhawk.
+											<p class="text-white"> Check out this repository on <a class="text-white"
+												href="https://github.com/semillakan6/brikwars-statcard-gen">GitHub</a>.
+											</p>
+											<p class="text-white"> Check out the original repository on <a class="text-white"
+													href="https://github.com/westnordost/brikwars-statcard-generator">GitHub</a>.
+											</p>
+	
+											<p class="text-white">The statcards generated here can be redistributed under the <a class="text-white"
+													href="https://brikwars.com/rules/2020/legal.htm#fairuse">same
+													conditions
+													as
+													the
+													official BrikWars
+													material</a>. </p>
+											<div class="help text-black text-center text-white">
+												<br />
+												&copy; Credits
+												<br />
+												2023-2024 Ruben Cuevas &lt;rcuemor@gmail.com&gt;
+												<br />
+												2014-2018 Tobias Zwick &lt;newton@westnordost.de&gt;
+												<br />
+												Poker card format statcard by Peter Sanderson,
+												Other artwork by Mike Rayhawk.
+											</div>
 										</div>
-
 									</form>
 								</div>
 							</div>
