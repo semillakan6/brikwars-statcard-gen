@@ -1,0 +1,28 @@
+{
+  "name": "brikwars-card-generator",
+  "version": "1.0.0",
+  "description": "A stat card generator for the tabletop game Brikwars",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/semillakan6/brikwars-statcard-gen.git"
+  },
+  "keywords": [
+    "brikwars",
+    "statcards",
+    "generator"
+  ],
+  "author": "Ruben Cuevas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/semillakan6/brikwars-statcard-gen/issues"
+  },
+  "homepage": "https://github.com/semillakan6/brikwars-statcard-gen#readme",
+  "devDependencies": {
+    "electron": "^28.1.0"
+  }
+}
