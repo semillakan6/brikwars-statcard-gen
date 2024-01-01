@@ -79,8 +79,69 @@ function clearForm() {
     statcard.updateHelp(document.forms[0]);
 }
 
+function downloadImage(name, url) {
+    // Create invisible link
+    var invisibleLink = document.createElement('a');
+    invisibleLink.style.display = 'none';
+    document.body.appendChild(invisibleLink);
+
+    // Set attributes and click
+    invisibleLink.href = url;
+    invisibleLink.download = name;
+    invisibleLink.click();
+
+    // Clean up document body
+    document.body.removeChild(invisibleLink);
+}
+
 function openDownload() {
-    document.getElementById("print_format").style.display = "table";
+    //document.getElementById("print_format").style.display = "table";
+    Swal.fire({
+        title: 'Which format?',
+        html: `
+          <table>
+              <tbody>
+                  <tr>
+                      <td>
+                          <img src="images/printyourself.jpg" class="img-fluid" />
+                          <div>One file for front and back side, foldable and with a black frame.</div>
+                          <button class="btn btn-outline-dark" type="button" id="foldable">Download Foldable</button>
+                      </td>
+                      <td>
+                          <img src="images/printprofessionally.jpg" class="img-fluid" />
+                          <div>Two separate files for front and back, with bleed.</div>
+                          <button class="btn btn-outline-dark" type="button" id="front">Download Front</button>
+                          <button class="btn btn-outline-dark" type="button" id="back">Download Back</button>
+                      </td>
+                  </tr>
+              </tbody>
+          </table>`,
+        showCloseButton: true,
+        didOpen: () => {
+
+            document.getElementById('front').onclick = function () {
+                var name = "Untitled Statcard - Front";
+                if (moc.name) name = moc.name + " Statcard - Front";
+                var url = statcard.createFrontImage().toDataURL("image/png");
+                downloadImage(name + ".png", url);
+            }
+
+            document.getElementById('back').onclick = function () {
+                var name = "Untitled Statcard - Back";
+                if (moc.name) name = moc.name + " Statcard - Back";
+                var url = statcard.createBackImage().toDataURL("image/png");
+                downloadImage(name + ".png", url);
+            }
+
+            document.getElementById('foldable').onclick = function () {
+                var name = "Untitled Statcard";
+                if (moc.name) name = moc.name + " Statcard";
+                var url = statcard.createFoldableImage().toDataURL("image/png");
+                downloadImage(name + ".png", url);
+            }
+
+        },
+    })
 }
 
 function closeDownload() {
@@ -117,29 +178,20 @@ function userAgentIsIE() {
 }
 
 function printStatcard() {
-    var exile = document.getElementById("exile");
-    var theform = document.getElementById("content");
     var canvas = statcard.createFoldableImage();
     var layout = statcard.layout;
 
     canvas.style.width = canvas.width / layout.dpi + "in";
     canvas.style.height = canvas.height / layout.dpi + "in";
 
-    // set up
-    theform.style.display = "none";
-    exile.appendChild(canvas);
-    var title = document.title;
     var name = "Untitled Statcard";
     if (moc.name) name = moc.name + " Statcard";
-    document.title = name;
-
-    // print
-    window.print();
-
-    // clean up
-    document.title = title;
-    exile.removeChild(exile.firstChild);
-    theform.style.display = "table";
+    
+    var printWindow = window.open("", "_blank");
+    printWindow.document.write("<html><head><title>" + name + "</title></head><body></body></html>");
+    printWindow.document.body.appendChild(canvas);
+    printWindow.document.close();
+    printWindow.print();
 }
 
 function updateTitleImage() {

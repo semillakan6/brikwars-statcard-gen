@@ -28,7 +28,9 @@ class Moc {
 	}
 
 	calculateCost() {
-		this.cost = this.structure.cost; // add other cost considerations here
+		this.cost = this.structure.cost; 
+		this.cost += this.superNatural.cost;
+		// add other cost considerations here
 	}
 
 	calculate() {
