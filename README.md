@@ -1,5 +1,7 @@
 # Brikwars 2023 Statcard Generator
-An updated version of 2010's BrikWars statcard generator by westnordost (<a href="https://www.westnordost.de/statcard/">&gt;&gt;&gt; Check it out! &lt;&lt;&lt;</a>), almost completely redone to keep it up to date with the current ruleset.
+An fully portable and updated version of 2010's BrikWars statcard generator by westnordost (<a href="https://www.westnordost.de/statcard/">&gt;&gt;&gt; Original Version &lt;&lt;&lt;</a>), almost completely redone to keep it up to date with the current ruleset.
+
+To download the new version go to the <a href="https://github.com/semillakan6/brikwars-statcard-gen/releases">releases</a> tab
 
 BrikWars is copyright ©1995-2024 Mike Rayhawk.
 For more information and the complete rules, please visit <a href="https://www.brikwars.com">https://www.brikwars.com</a>.
