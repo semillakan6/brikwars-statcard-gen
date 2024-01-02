@@ -5,10 +5,7 @@ An fully portable and updated version of 2010's BrikWars statcard generator by w
 To download the new version go to the <a href="https://github.com/semillakan6/brikwars-statcard-gen/releases">releases</a> tab
 Any issues or request, please go to the <a href="https://github.com/semillakan6/brikwars-statcard-gen/issues">issue</a> tab
 
-
-
-
-
+# Credits
 BrikWars is copyright ©1995-2024 Mike Rayhawk.
 For more information and the complete rules, please visit <a href="https://www.brikwars.com">https://www.brikwars.com</a>.
 
