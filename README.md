@@ -3,6 +3,7 @@ An fully portable and updated version of 2010's BrikWars statcard generator by w
 
 # Downloads
 To download the new version go to the <a href="https://github.com/semillakan6/brikwars-statcard-gen/releases">releases</a> tab
+<br>
 Any issues or request, please go to the <a href="https://github.com/semillakan6/brikwars-statcard-gen/issues">issue</a> tab
 
 # Credits
