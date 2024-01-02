@@ -4,10 +4,18 @@
 <head>
 	<!-- Meta charset for the document -->
 	<meta charset="UTF-8" />
-
+	<meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://cdn.jsdelivr.net/npm/ https://cdnjs.cloudflare.com/ajax/libs/ https://storage.ko-fi.com 'sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3' 'unsafe-inline' 'sha256-BrvBAIw9Srx75RbUoKbOJMjqxQq7b8e4Qze1MiFYDSk=' 'sha256-2HK3pgbo7VnyZGLP9Aj9HeTKymBJ2IwgWSvpb4eKf/4=';
+    style-src 'self' https://cdnjs.cloudflare.com/ https://fonts.googleapis.com 'unsafe-inline';
+    img-src 'self' data: https://storage.ko-fi.com;
+    font-src 'self' https://cdnjs.cloudflare.com/ https://fonts.gstatic.com;
+    connect-src 'self';
+    object-src 'none';
+    frame-src 'none'">
 	<!-- Responsive viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-
+	
 	<!-- Webpage description for SEO purposes -->
 	<meta name="description" content="BrikWars 2023: A statcard generator for your fiercest Brik battles." />
 
@@ -15,15 +23,14 @@
 	<title>BrikWars 2023 Statcard Generator</title>
 
 	<!-- Favicon for the tab icon in the browser -->
-	<link rel="icon" type="image/png" sizes="32x32" href="images/icon.png" />
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico" />
 
 	<!-- Link to your CSS styles -->
 	<link rel="stylesheet" type="text/css" href="css/fonts.css" />
 	<link rel="stylesheet" type="text/css" href="css/default.css" />
 
 	<!-- Link to Bootstrap CSS and some attributes for its scripts included -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"
-		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 	<link href="css/select2.min.css" rel="stylesheet" />
 	<link href="node_modules\filepond\dist\filepond.min.css" rel="stylesheet" />
@@ -34,9 +41,7 @@
 		crossorigin="anonymous"></script>
 
 	<!-- Bootstrap bundled script -->
-	<script src="js/bootstrap.bundle.min.js"
-		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-		crossorigin="anonymous"></script>
+	<script src="js/bootstrap.bundle.min.js"></script>
 	<script src="js/jquery-3.7.1.min.js"></script>
 	<script src="js/sweetalert2.all.min.js"></script>
 	<script src="js/select2.min.js"></script>

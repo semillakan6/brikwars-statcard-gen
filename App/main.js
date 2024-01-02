@@ -5,27 +5,18 @@ const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 
 const createWindow = () => {
-    let icon;
-    switch (process.platform) {
-        case 'win32': icon = path.resolve('../'+__dirname, 'images', 'icon.png'); break;
-        case 'darwin': icon = path.resolve('../'+__dirname, 'images', 'icon.png'); break;
-        case 'linux': icon = path.resolve('../'+__dirname, 'images', 'icon.png'); break;
-    }
-    // Create the browser window.
     const mainWindow = new BrowserWindow({
         width: 1320,
         height: 600,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
-            webPreferences: {
-                nodeIntegration: true
-            },
-            icon
-        }
+            nodeIntegration: false
+        },
+        icon: path.join(__dirname, 'img/favicon.ico')
     })
 
     // and load the index.html of the app.
-    mainWindow.loadFile('../index.html')
+    mainWindow.loadFile(path.join(__dirname, '..', 'index.html'))
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
