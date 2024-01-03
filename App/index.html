@@ -1,0 +1,1311 @@
+﻿<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+	<!-- Meta charset for the document -->
+	<meta charset="UTF-8" />
+	<!-- Responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<!-- Webpage description for SEO purposes -->
+	<meta name="description" content="BrikWars 2023: A statcard generator for your fiercest Brik battles." />
+
+	<!-- Assigns a default name to the browser's tab -->
+	<title>BrikWars 2023 Statcard Generator</title>
+
+	<!-- Favicon for the tab icon in the browser -->
+	<link rel="icon" type="image/png" sizes="32x32" href="images/favicon.ico" />
+
+	<!-- Link to your CSS styles -->
+	<link rel="stylesheet" type="text/css" href="css/fonts.css" />
+	<link rel="stylesheet" type="text/css" href="css/default.css" />
+
+	<!-- Link to Bootstrap CSS and some attributes for its scripts included -->
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+	<link href="css/select2.min.css" rel="stylesheet" />
+	<link href="node_modules\filepond\dist\filepond.min.css" rel="stylesheet" />
+
+	<!-- JavaScript for interactive elements -->
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+		integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+		crossorigin="anonymous"></script>
+
+	<!-- Bootstrap bundled script -->
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/jquery-3.7.1.min.js"></script>
+	<script src="js/sweetalert2.all.min.js"></script>
+	<script src="js/select2.min.js"></script>
+	<script src="node_modules\filepond\dist\filepond.min.js"></script>
+	<script src="node_modules\jquery-filepond\filepond.jquery.js"></script>
+	<script src="js/index.js"></script>
+</head>
+
+<body>
+	<div class="bg-img">
+		<div id="content">
+			<div id="content_form bg-img">
+				<div class="container py-5 bg-transparent">
+					<div class="row justify-content-center">
+						<div class="col-12 col-sm-12 col-lg-10">
+							<div class="card content">
+								<div class="card-body content_form">
+									<form class="container col-12">
+										<h1 class="mb-4">
+											<img src="images/bw_title_2023.png" class="img-fluid w-75" alt="BrikWars" />
+											<br />
+											<p class="text-white">Statcard Generator</p>
+										</h1>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="2">
+															Unit Type (<a target="_blank" class="ref"
+																href="https://brikwars.com/rules/draft/mc.htm#4">MC.4
+																Unit Inches</a>)
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<th>Type</th>
+														<td>
+															<div class="col-md-12 col-lg-12">
+																<select class="form-select" id="unit_type"
+																	name="unit_type" onchange="">
+																	<option value="">
+																		Select your type of unit...
+																	</option>
+																	<option value="minifig">Minifig</option>
+																	<option value="hero_minifig">
+																		Heroic Minifig
+																	</option>
+																	<option value="greatleader_minifig">
+																		Great Leader
+																	</option>
+																	<option value="horse">Horse</option>
+																	<option value="creature">Creature</option>
+																	<option value="flying_creature">
+																		Flying Creature
+																	</option>
+																	<option value="vehicle">Vehicle</option>
+																	<option value="flying_machine">
+																		Flying Vehicle
+																	</option>
+																	<option value="structure">Structure</option>
+																</select>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<th>Type of Attributes</th>
+														<td>
+															<div class="form-check">
+																<input class="form-check-input" type="radio"
+																	name="type_attr" id="default_attr"
+																	value="default" />
+																<label class="form-check-label" for="default_attr">
+																	Default Attributes
+																</label>
+															</div>
+															<div class="form-check">
+																<input class="form-check-input" type="radio"
+																	name="type_attr" id="enhanced_attr" value="enhanced"
+																	checked />
+																<label class="form-check-label" for="enhanced_attr">
+																	Enhanced Attributes
+																</label>
+															</div>
+															<div class="alert alert-info" role="alert">
+																The MOC Combat system allows players to juggle
+																a series of upgrades and downgrades (Enhanced
+																Attributes) to get exactly the flavor of
+																creation they're looking for. That time is
+																almost always better spent building more
+																weapons instead. The easiest way to calculate
+																a creation's core attributes is not to bother
+																(Default Attributes). For creation stats that
+																don't need personalized attention, players can
+																drop in default abilities with a simple Size
+																measurement like you want it. (<a target="_blank"
+																	class="ref"
+																	href="https://brikwars.com/rules/draft/mc.htm#default">MC.1.2
+																	Default Attributes</a>)
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="2">
+															Structure (<a target="_blank" class="ref"
+																href="https://brikwars.com/rules/2020/7.htm#1">Chapter
+																7: Structures</a>)
+														</th>
+														<th style="width: 40pt">Ü Cost</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<th>Inches</th>
+														<td>
+															<div class="col-md-12 col-lg-12">
+																<div class="input-group mb-3">
+																	<input id="structure_size" name="structure_size"
+																		type="number" value="0" min="0" step="1"
+																		size="2" onchange="handleInputChange();"
+																		onkeyup="handleInputChange();"
+																		class="form-control"
+																		aria-label="MOC or Minifig size"
+																		aria-describedby="creature-size" disabled />
+																	<span class="input-group-text"
+																		id="creature-size">inch</span>
+																</div>
+															</div>
+															<div class="alert alert-info" role="alert">
+																The Size of a creation's central structure
+																(ignoring surface components like cannon
+																turrets, legs, and flame exhaust). Round up-
+																or downward according to preference.
+																<br />
+																The base Unit Inch Value of a unit (minifigs,
+																autonomous laser turrets, artificially
+																intelligent spider robots) is equal to its
+																inches of Size. In MOC Combat, minifigs and
+																non-Heroic minifig Specialists are each worth
+																one Unit Inch. Minifig Heroes are worth two
+																Unit Inches. See table of
+																<a target="_blank" class="ref"
+																	href="https://brikwars.com/rules/draft/mc.htm#units">MC.4.2
+																	Measuring Units</a>
+																for more information.
+															</div>
+														</td>
+														<td class="cost">
+															<input type="text" value="0" id="structure_cost"
+																name="structure_cost" size="1" disabled="disabled"
+																class="form-control"
+																aria-label="MOC or Minifig total cost"
+																aria-describedby="creature-cost" />
+														</td>
+													</tr>
+													<tr id="amor_input">
+														<th>Armor</th>
+														<td>
+															<div class="col-md-12 col-lg-12">
+																<div class="input-group mb-3">
+																	<div class="input-group-text">
+																		<div class="form-check">
+																			<input class="form-check-input"
+																				type="checkbox" name="custom_armor"
+																				onchange="calculate();" />
+																			<label class="form-check-label"
+																				for="custom_armor">
+																				Custom
+																			</label>
+																		</div>
+																	</div>
+																	<select id="structure_level" name="structure_level"
+																		onchange="calculate();" onkeyup="calculate();"
+																		onmousemove="moc.structure.updateHelp(document.forms[0]);"
+																		class="form-select">
+																		<option value="0">0</option>
+																		<option value="0.5">1d6</option>
+																		<option value="1">1d10</option>
+																		<option value="2">2d10</option>
+																		<option value="3">3d10</option>
+																		<option value="4">4d10</option>
+																		<option value="5">5d10</option>
+																	</select>
+																	<input id="armor" name="armor" type="text"
+																		onchange="calculate();" onkeyup="calculate();"
+																		class="form-control" />
+																	<div id="armor_selection">
+																		<div id="standard_armor_div">
+																			<div class="example">
+																				<p id="structure_example"></p>
+																			</div>
+																			<div class="alert alert-info" role="alert">
+																				Choose according to what seems most
+																				appropriate. Armor level cannot be
+																				higher than the structure's size.
+																			</div>
+																		</div>
+																		<div id="custom_armor_div">
+																			<div class="example">like '2d6-2'</div>
+																			<div class="alert alert-danger"
+																				role="alert">
+																				<span style="color: red">
+																					Note that there is none of this in
+																					the rules!
+																				</span>
+																				The check that the armor level cannot
+																				be higher than the structure's size is
+																				disabled with custom armor (which will
+																				also make the armor shown in the
+																				damage table not degenerate with
+																				damage taken). The cost is
+																				extrapolated from armor rates in the
+																				rules.
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</td>
+														<td class="cost"></td>
+													</tr>
+													<tr id="enhancements">
+														<th>Enhancements</th>
+														<td>
+															<table class="table enhancement_table"
+																style="background-color: rgb(210, 210, 207)">
+																<thead>
+																	<tr>
+																		<th scope="col">
+																			Available Unit Inches (Ü)
+																		</th>
+																		<th scope="col">
+																			<input type="text" class="form-control"
+																				id="u_inches" name="u_inches"
+																				placeholder="Ü" value="2" readonly />
+																		</th>
+																	</tr>
+																	<tr>
+																		<th scope="col">Enhancement</th>
+																		<th scope="col">
+																			Assigned (Cannot be more than Ü
+																			available )
+																		</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td class="icon-td armor">
+																			<div class="content">
+																				<div class="icon"></div>
+																				<span>Armor</span>
+																				<div style="display: flex; flex-direction: row; align-items: center; justify-content: start;">
+																					<input type="text"
+																						class="form-control ms-3"
+																						style="width: 70%"
+																						id="txtAmorTotal"
+																						name="txtAmorTotal" value="1d6"
+																						disabled />
+																					<span id="deflectionStatus"
+																						name="deflectionStatus" style="font-family: Calibri, sans-serif !important; font-size: 15px;">
+																						<img src="images/attribute_icons/ico_50_armor_fill.png"
+																							alt="Shield icon"
+																							width="18%" />
+																						has deflection
+																					</span>
+																				</div>
+																			</div>
+																		</td>
+																		<td>
+																			<input type="number" class="form-control"
+																				id="txtAmorUpgrade"
+																				name="txtAmorUpgrade"
+																				placeholder="Amount" min="0" max="5"
+																				value="0" />
+																			<input class="form-check-input"
+																				type="checkbox" value="1"
+																				id="deflectionCheck"
+																				name="deflectionCheck" />
+																			<img src="images/attribute_icons/ico_50_armor_fill.png"
+																				alt="Shield icon" width="12%" />
+																			Deflection x1
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="icon-td power">
+																			<div class="content">
+																				<div class="icon"></div>
+																				<span>Power</span>
+																				<div class="input-group p-3">
+																					<input type="text"
+																						class="form-control"
+																						id="txtPowerTotal"
+																						name="txtPowerTotal" value="2x"
+																						disabled />
+																					<span class="input-group-text">Power
+																						Up</span>
+																				</div>
+																				<div class="input-group p-3">
+																					<input type="text"
+																						class="form-control"
+																						id="txtPowerAvailable"
+																						name="txtPowerAvailable"
+																						placeholder="0" disabled />
+																					<span class="input-group-text">Power
+																						Available</span>
+																				</div>
+																			</div>
+																		</td>
+																		<td>
+																			<input type="number" class="form-control"
+																				id="txtPowerUpgrade"
+																				name="txtPowerUpgrade"
+																				placeholder="Amount" value="0" min="0"
+																				max="2" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="icon-td move">
+																			<div class="content">
+																				<div class="icon"></div>
+																				<span>Move</span>
+																				<input type="text"
+																					class="form-control m-3"
+																					id="txtMoveTotal"
+																					name="txtMoveTotal" value="0''"
+																					disabled />
+																			</div>
+																		</td>
+																		<td>
+																			<input type="number" class="form-control"
+																				id="txtMoveUpgrade"
+																				name="txtMoveUpgrade"
+																				placeholder="Amount" value="0"
+																				min="0" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="icon-td action">
+																			<div class="content">
+																				<div class="icon"></div>
+																				<span>Action</span>
+																				<div
+																					class="input-group input-group-sm p-3">
+																					<input type="text"
+																						class="form-control"
+																						id="txtActionTotal"
+																						name="txtActionTotal"
+																						placeholder="1d6" value="1d6"
+																						disabled />
+																					<span
+																						class="input-group-text">Action
+																					</span>
+																				</div>
+																				<div
+																					class="input-group input-group-sm p-3">
+																					<input type="text"
+																						class="form-control"
+																						id="txtMindTotal"
+																						name="txtMindTotal"
+																						placeholder="0" disabled />
+																					<span
+																						class="input-group-text">Minds</span>
+																				</div>
+																			</div>
+																		</td>
+																		<td>
+																			<div class="mb-3">
+																				<label for="txtActionUpgrade"
+																					class="form-label">Action
+																					Die</label>
+																				<input type="number"
+																					class="form-control"
+																					id="txtActionUpgrade"
+																					name="txtActionUpgrade"
+																					placeholder="Amount" value="0"
+																					min="0" max="3" />
+																			</div>
+																			<div class="mb-3">
+																				<label for="txtMindUpgrade"
+																					class="form-label">Minds</label>
+																				<input type="number"
+																					class="form-control"
+																					id="txtMindUpgrade"
+																					name="txtMindUpgrade"
+																					placeholder="Amount" value="0"
+																					min="0" />
+																			</div>
+																		</td>
+																	</tr>
+																	<tr>
+																		<td class="icon-td value">
+																			<div class="content">
+																				<div class="icon"></div>
+																				<span>Value</span>
+																				<input type="text"
+																					class="form-control m-3"
+																					id="txtValueTotal"
+																					name="txtValueTotal" value="0"
+																					disabled />
+																			</div>
+																		</td>
+																		<td>
+																			<input type="number" class="form-control"
+																				id="txtValueUpgrade"
+																				name="txtValueUpgrade"
+																				placeholder="Amount" value="0"
+																				min="0" />
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+
+															<div class="alert alert-info" role="alert">
+																A basic object in BrikWars starts with Armor
+																1d6 and no movement ability. If it's able to
+																operate devices, it has enough Power to
+																operate twice its own Size inches' worth of
+																weapons. If it has the ability to act on its
+																own, it does so with an Action die of 1d6.
+																<br />
+																As a creation's Size increases, it gains
+																Enhancements to these basic attributes,
+																described in detail in their respective
+																chapters. Creatures and vehicles gain one
+																Enhancement for each of their first five
+																inches of Size. Unmoving structures gain
+																Enhancements on odd-numbered Size inches (1",
+																3", and 5").
+																<br />
+																For either type, additional Size inches past
+																5" have no further benefit. Any Enhancement
+																added past these limits must be paid for with
+																an Impairment.
+															</div>
+														</td>
+														<td class="cost">
+															<table class="table" style="
+                                    background-color: rgb(248, 185, 185);
+                                    border-color: black;
+                                  ">
+																<thead>
+																	<tr style="
+                                        background-color: rgb(248, 185, 185);
+                                        border-color: black;
+                                      ">
+																		<td scope="col">Impairment</td>
+																		<td scope="col">Assigned</td>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>
+																			Armor
+																			<br />
+																			<p style="color: red">
+																				-<img
+																					src="images/attribute_icons/ico_50_armor_fill.png"
+																					alt="Amor" height="25" />: 0
+																			</p>
+																		</td>
+																		<td class="text-center">
+																			<input class="form-check-input"
+																				type="checkbox" value="1"
+																				id="armor_impairmentCheck"
+																				name="armor_impairmentCheck" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			Power
+																			<p style="color: red; font-size: 12px">
+																				-<img
+																					src="images/attribute_icons/ico_50_power_fill.png"
+																					alt="Power" height="25" />: Half
+																				Power
+																			</p>
+																		</td>
+																		<td class="text-center">
+																			<input class="form-check-input"
+																				type="checkbox" value="1"
+																				id="power_impairmentCheck"
+																				name="power_impairmentCheck" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			Move
+																			<p style="color: red; font-size: 12px">
+																				-<img
+																					src="images/attribute_icons/ico_50_move_fill.png"
+																					alt="Power" height="25" />: Half
+																				Speed
+																			</p>
+																		</td>
+																		<td class="text-center">
+																			<input class="form-check-input"
+																				type="checkbox" value="1"
+																				id="speed_impairmentCheck"
+																				name="speed_impairmentCheck" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			Action
+																			<p style="color: red; font-size: 12px">
+																				-<img
+																					src="images/attribute_icons/ico_50_action_fill.png"
+																					alt="Power" height="25" />: Half
+																				Minded
+																			</p>
+																		</td>
+																		<td class="text-center">
+																			<input class="form-check-input"
+																				type="checkbox" value="1"
+																				id="action_impairmentCheck"
+																				name="action_impairmentCheck" />
+																		</td>
+																	</tr>
+																	<tr>
+																		<td>
+																			Value
+																			<p style="color: red; font-size: 12px">
+																				-<img
+																					src="images/attribute_icons/ico_50_unit_inches_fill.png"
+																					alt="Power" height="25" />: +1Ü
+																			</p>
+																		</td>
+																		<td class="text-center">
+																			<input type="number" class="form-control"
+																				value="0" min="0"
+																				id="value_impairmentCheck"
+																				name="value_impairmentCheck" />
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</td>
+													</tr>
+													<tr id="thrust">
+														<th>
+															<input name="prop_thrust" value="1" type="checkbox"
+																onchange="calculate();" />
+															Thrusters
+															<div class="help">
+																jets, propellers, sails, rockets...
+															</div>
+														</th>
+														<td colspan="2">
+															<div class="input-group mb-3">
+																<select class="form-select" id="prop_thrust_speed"
+																	name="prop_thrust_speed" onchange="calculate();">
+																	<option value="0">No Thruster</option>
+																	<option value="1">Small Thruster</option>
+																	<option value="2">Medium Thruster</option>
+																	<option value="3">Large Thruster</option>
+																	<option value="4">Giant Thruster</option>
+																</select>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="table-responsive" id="propulsion_table">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="2">
+															Propulsion (<a target="_blank" class="ref"
+																href="https://brikwars.com/rules/2020/9.htm#1">Chapter
+																9: Vehicles</a>)
+														</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr id="ground">
+														<th style="width: 150pt">
+															<input id="prop_ground" name="prop_ground" value="1"
+																type="checkbox" onchange="calculate();" disabled />
+															Standard Movement
+															<span class="help">wheels, legs, treads, space flight...
+															</span>
+														</th>
+														<td>
+															<div class="input-group mb-3">
+																<input class="form-control" name="prop_ground_speed"
+																	min="0" max="10" step="1" size="2" type="number"
+																	disabled="disabled" onkeyup="calculate();"
+																	onchange="calculate();" />
+																<span class="input-group-text"
+																	id="inch_span">inch</span>
+															</div>
+															<div class="example" id="prop_ground_example"></div>
+														</td>
+													</tr>
+													<tr id="flying">
+														<th>
+															<input name="prop_flying" value="1" type="checkbox"
+																onchange="calculate();" disabled />Flying Movement
+															<div class="help">
+																wings, antigravity, capes...
+															</div>
+														</th>
+														<td>
+															<div class="input-group mb-3">
+																<input class="form-control" name="prop_flying_speed"
+																	min="5" max="15" step="1" size="2" type="number"
+																	disabled="disabled" onkeyup=" calculate();"
+																	onchange="calculate();" />
+																<span class="input-group-text"
+																	id="inch_span">inch</span>
+															</div>
+															<div class="example" id="prop_flying_example"></div>
+														</td>
+													</tr>
+													<tr>
+														<td colspan="2" class="notes">
+															<div class="example" id="flying_notes">
+																&nbsp;
+															</div>
+														</td>
+														<td class="cost"></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="table-responsive" id="mind_table">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="2">Mind</th>
+														<th style="width: 40pt"></th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td colspan="2">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox"
+																	id="mind"
+																	onchange="calculate(); updateTitleImage()" />
+																<label class="form-check-label" for="mind">Has an own
+																	mind</label>
+															</div>
+															<small class="text-muted">The creation is a creature, robot
+																or other
+																construct that can act independently without a
+																pilot. (<a target="_blank"
+																	href="https://brikwars.com/rules/2020/10.htm#1">Chapter
+																	10.1: Minds</a>)
+															</small>
+														</td>
+														<td class="cost"></td>
+													</tr>
+												</tbody>
+												<tbody id="mind_more">
+													<tr id="skill_tr">
+														<th scope="col" style="width: 80pt">Skill</th>
+														<td>
+															<select class="form-select" name="skill"
+																onchange="calculate();"></select>
+															<div class="example" id="skill_example"></div>
+														</td>
+														<td class="cost"></td>
+													</tr>
+													<tr>
+														<th scope="col">
+															<div class="form-check">
+																<input class="form-check-input" type="checkbox"
+																	id="halfmind" onchange="calculate();" />
+																<label class="form-check-label" for="halfmind">Half
+																	Mind</label>
+															</div>
+														</th>
+														<td>
+															<select class="form-select" name="halfmind_type"
+																onchange="calculate();" disabled></select>
+															<div class="example" id="halfmind_example"></div>
+															<div class="help" id="halfmind_help"></div>
+														</td>
+														<td class="cost">
+															<input type="hidden" class="form-control" name="skill_cost"
+																size="1" disabled />
+														</td>
+													</tr>
+													<tr id="program_container" style="display: none">
+														<th scope="col">Program</th>
+														<td>
+															<textarea class="form-control" name="program"
+																onchange="calculate();"></textarea>
+															<small class="text-muted">
+																Optionally specify the program here. It must
+																be fairly specific: “Move to the nearest
+																wounded allies and attempt to heal them” or
+																“Stay close to the nearest allied troops and
+																fire at enemy combatants” are fine behaviors;
+																“Defeat all enemies” and “Win the battle” are
+																not.
+															</small>
+														</td>
+														<td class="cost"></td>
+													</tr>
+													<tr>
+														<th scope="col">Extra Minds</th>
+														<td>
+															<input type="number" class="form-control" name="extra_minds"
+																min="0" step="1" onchange="calculate();" />
+															<small class="text-muted">
+																Give the unit one or more extra Minds of the
+																same kind as adjusted above which gives it an
+																extra Action for each extra Mind. The same
+																weapon, hand, or equipment item still cannot
+																be used for more than one Action in one turn.
+																Create a separate stat card if you need
+																several different minds for your creation.
+															</small>
+														</td>
+														<td class="cost">
+															<input type="hidden" class="form-control"
+																name="extra_minds_cost" size="1" disabled />
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<div class="table-responsive" id="weapon_table">
+											<table class="table table-hover">
+												<thead>
+													<tr>
+														<th colspan="9">
+															Armament
+															<a target="_blank" class="ref"
+																href="http://www.brikwars.com/rules/2020/8.htm">
+																Chapter 8: Weaponry
+															</a>
+														</th>
+													</tr>
+													<tr id="weapons_head">
+														<th class="col">Type</th>
+														<th class="col">Size</th>
+														<th class="col">Amount</th>
+														<th class="col">Custom Name</th>
+														<th class="col">Use</th>
+														<th class="col">Range</th>
+														<th class="col">Damage / Notes</th>
+														<th class="col"></th>
+													</tr>
+												</thead>
+												<tbody id="weapons"></tbody>
+												<tfoot>
+													<tr>
+														<td colspan="6">
+															<div
+																class="d-flex align-items-center justify-content-start">
+																<button type="button"
+																	class="btn btn-sm btn-outline-dark me-3"
+																	onclick="moc.armament.add(); calculate();">
+																	<i class="fas fa-plus"></i> Add
+																</button>
+																<div class="form-check">
+																	<input class="form-check-input" type="checkbox"
+																		value="" id="weapons_minifigs"
+																		name="weapons_minifigs" />
+																	<label class="form-check-label"
+																		for="weapons_minifigs">Show Bastard Minifig
+																		weapons
+																		instead</label>
+																</div>
+															</div>
+														</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th colspan="5">Extra Protection</th>
+														<th style="width: 40pt"></th>
+													</tr>
+													<tr id="equipment_head">
+														<th scope="col" style="width: 135pt">Type</th>
+														<th scope="col" style="width: 40pt">Amount</th>
+														<th scope="col" style="width: 60pt">Strength</th>
+														<th scope="col">Effect</th>
+														<th scope="col" style="width: 40pt"></th>
+														<th scope="col" style="width: 40pt"></th>
+													</tr>
+												</thead>
+												<tbody id="equipment"></tbody>
+												<tbody>
+													<tr>
+														<td colspan="5">
+															<button type="button" class="btn btn-sm btn-outline-dark"
+																onclick="moc.equipment.add(); calculate();">
+																<i class="fas fa-plus"></i>
+															</button>
+														</td>
+														<td></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<tr>
+														<th scope="col"></th>
+														<th scope="col" colspan="2">
+															Specialist / Custom Equipment
+															<a target="_blank" class="ref"
+																href="https://brikwars.com/rules/2020/s.htm">
+																Chapter S: Minifig Specialists
+															</a>
+														</th>
+														<th scope="col" style="width: 40pt"></th>
+													</tr>
+												</thead>
+												<tbody id="specialities"></tbody>
+												<tbody>
+													<tr>
+														<td>
+															<button type="button" class="btn btn-sm btn-outline-dark"
+																onclick="moc.specialities.add(); calculate();">
+																<i class="fas fa-plus"></i>
+															</button>
+														</td>
+														<td colspan="2">
+															<span>With template</span>
+															<select class="form-control" name="specialities_templates"
+																onchange="calculate();" onkeyup="calculate();"></select>
+
+															<div class="alert alert-info mt-2">
+																Specify and describe your own specialities and
+																equipment here.
+															</div>
+														</td>
+														<td></td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+										<table class="table table-responsive">
+											<thead>
+												<tr>
+													<th colspan="4">SuperNatural</th>
+													<th style="width: 40pt">Cost</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td colspan="5">
+														<div class="form-check">
+															<input class="form-check-input" type="checkbox"
+																name="supernatural"
+																onchange="moc.superNatural.addIfEmpty(); calculate();" />
+															<label class="form-check-label" for="supernatural">
+																Is SuperNatural
+															</label>
+														</div>
+														<small class="form-text text-muted">Embodies a SuperNatural
+															Cliché: A Wizard, Super
+															Hero, Psychik, Magical Abomination ... (<a target="_blank"
+																class="ref"
+																href="https://brikwars.com/rules/2020/d.htm">Chapter D:
+																The Dice</a>)</small>
+													</td>
+												</tr>
+											</tbody>
+											<thead id="supernatural_header">
+												<tr></tr>
+												<tr>
+													<th style="width: 110pt">Die</th>
+													<th style="width: 50pt">Amount</th>
+													<th>Notes</th>
+													<th style="width: 40pt"></th>
+													<th style="width: 40pt"></th>
+												</tr>
+											</thead>
+											<tbody id="supernatural_dice"></tbody>
+											<tbody id="supernatural_more">
+												<tr>
+													<td colspan="5">
+														<button class="btn btn-sm btn-outline-dark" type="button"
+															name="supernatural_add"
+															onclick="moc.superNatural.add(); calculate();">
+															<i class="fas fa-plus"></i>
+														</button>
+														<small class="form-text text-muted">A SuperNaturally-powered
+															unit measures the
+															strength of its abilities by the SuperNatural
+															Dice under its control.</small>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+										<table>
+											<thead>
+												<tr>
+													<th colspan="2"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th>Total Cost</th>
+													<td class="cost">
+														<input type="text" disabled="disabled" name="total_cost"
+															size="2" />
+													</td>
+												</tr>
+											</tbody>
+										</table>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+													<th colspan="2">Customize Statcard</th>
+												</thead>
+												<tbody>
+													<tr>
+														<th>Format</th>
+														<td>
+															<div class="col-12">
+																<div class="input-group mb-3">
+																	<div class="col-md-5 col-lg-4">
+																		<select class="form-select" id="statcard_format"
+																			name="statcard_format"
+																			onchange="changeLayout()"
+																			onkeyup="changeLayout()"
+																			aria-label="Statcard format">
+																			<option value="classic">
+																				Classic (2.75 x 3.0 in)
+																			</option>
+																			<option value="poker">
+																				Poker (2.5 x 3.5 in)
+																			</option>
+																		</select>
+																	</div>
+																	<div class="col-md-7 col-lg-8">
+																		<label class="input-group-text"
+																			id="statcard_format_help"
+																			role="alert">Format Help Text</label>
+																	</div>
+																</div>
+															</div>
+														</td>
+													</tr>
+													<tr>
+														<td colspan="2" id="statcard_container">
+															<div id="statcard_div_front" class="classic">
+																<canvas id="statcard_title_image" width="600"
+																	height="650" z-index="0"></canvas>
+																<canvas id="statcard_front_background" width="600"
+																	height="650" z-index="1"></canvas>
+																<canvas id="statcard_front_color_area1" width="600"
+																	height="650" z-index="2"></canvas>
+																<canvas id="statcard_front_color_area2" width="600"
+																	height="650" z-index="3"></canvas>
+																<canvas id="statcard_front_color_area3" width="600"
+																	height="650" z-index="4"></canvas>
+																<canvas id="statcard_front_foreground" width="600"
+																	height="650" z-index="5"></canvas>
+																<canvas id="statcard_front_frame" width="600"
+																	height="650" z-index="10"></canvas>
+																<div id="statcard_front" z-index="7"></div>
+															</div>
+															<div id="statcard_div_back" class="classic">
+																<canvas id="statcard_watermark_background" width="600"
+																	height="650" z-index="0"></canvas>
+																<canvas id="statcard_watermark_image" width="600"
+																	height="650" z-index="1"></canvas>
+																<canvas id="statcard_back_background" width="600"
+																	height="650" z-index="2"></canvas>
+																<canvas id="statcard_back_color_area1" width="600"
+																	height="650" z-index="3"></canvas>
+																<canvas id="statcard_back_color_area3" width="600"
+																	height="650" z-index="4"></canvas>
+																<canvas id="statcard_back_foreground" width="600"
+																	height="650" z-index="5"></canvas>
+																<canvas id="statcard_back_frame" width="600"
+																	height="650" z-index="10"></canvas>
+																<div id="statcard_back" z-index="6"></div>
+															</div>
+															<table id="print_format" z-index="11" style="display: none">
+																<thead>
+																	<tr>
+																		<th colspan="2">
+																			Which format?<button class="close"
+																				type="button" onclick="closeDownload()">
+
+																			</button>
+																		</th>
+																	</tr>
+																	<tr>
+																		<th>For printing out yourself</th>
+																		<th>For professional print</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>
+																			<img src="images/printyourself.jpg" />
+																			<div>
+																				One file for front and back side,
+																				foldable and with a black frame.
+																			</div>
+																		</td>
+																		<td>
+																			<img src="images/printprofessionally.jpg" />
+																			<div>
+																				Two separate files for front and back,
+																				with bleed.
+																			</div>
+																		</td>
+																	</tr>
+																</tbody>
+																<thead>
+																	<tr>
+																		<td>
+																			Download
+																			<a onclick="downloadStatcardFoldable(this)"><button
+																					type="button">
+																					Foldable
+																				</button></a>
+																		</td>
+																		<td>
+																			Download
+																			<a onclick="downloadStatcardFront(this)"><button
+																					type="button">
+																					Front
+																				</button></a>
+																			<a onclick="downloadStatcardBack(this)"><button
+																					type="button">
+																					Back
+																				</button></a>
+																		</td>
+																	</tr>
+																</thead>
+															</table>
+														</td>
+													</tr>
+													<tr>
+														<th class="text-center" colspan="2">
+															<button type="button" class="btn btn-outline-dark"
+																onclick="printStatcard()">
+																Print Statcard
+															</button>
+															<button type="button" class="btn btn-outline-dark"
+																onclick="openDownload()">
+																Download Statcard
+															</button>
+														</th>
+													</tr>
+													<tr>
+														<td colspan="2">
+															<div class="container">
+																<form>
+																	<div class="form-group row">
+																		<label for="moc_name"
+																			class="col-sm-2 col-form-label">Name</label>
+																		<div class="col-sm-10">
+																			<input type="text" class="form-control"
+																				id="moc_name" name="moc_name"
+																				placeholder="I.e. Jeb the Despoiler of Universes"
+																				onchange="calculate();"
+																				onkeyup="calculate();" />
+																		</div>
+																	</div>
+
+																	<div class="form-group row">
+																		<label for="moc_description"
+																			class="col-sm-2 col-form-label">Flavor
+																			Text</label>
+																		<div class="col-sm-10">
+																			<textarea class="form-control"
+																				id="moc_description"
+																				name="moc_description"
+																				placeholder="I.e. A long, long time ago, Jeb was enjoying a sandwich but the terrible Coocoo the bird stole it that made Jeb really mad so he swore to despoil all universes of the plague that are birds."
+																				onchange="calculate();"
+																				onkeyup="calculate();"></textarea>
+																		</div>
+																	</div>
+
+																	<div class="form-group row">
+																		<label
+																			class="col-sm-2 col-form-label">Colors</label>
+																		<div class="col-sm-4">
+																			<input type="color"
+																				class="form-control form-control-color inline-block"
+																				id="moc_color1" name="moc_color1"
+																				title="Background" value="#888888"
+																				onchange="updateStatcardColor1();" />
+																			<input type="color"
+																				class="form-control form-control-color inline-block"
+																				id="moc_color2" name="moc_color2"
+																				title="Title image background"
+																				value="#333333"
+																				onchange="updateStatcardColor2();" />
+																			<input type="color"
+																				class="form-control form-control-color inline-block"
+																				id="moc_color3" name="moc_color3"
+																				title="Brick" value="#333333"
+																				onchange="updateStatcardColor3();" />
+																		</div>
+																	</div>
+
+																	<div class="form-group row">
+																		<label for="moc_image"
+																			class="col-sm-2 col-form-label">Title
+																			Picture</label>
+																		<div class="col-sm-10">
+																			<small class="form-text text-muted">You can
+																				zoom in with the scrollwheel
+																				and move the picture around with the
+																				mouse. The image size should be at
+																				least 412x412 pixels for the classic
+																				or 520x700 pixels for the poker style
+																				card, otherwise it will be
+																				blurry.</small>
+																			<input type="file"
+																				class="form-control-file my-pond1"
+																				id="moc_image" name="moc_image" />
+																		</div>
+																	</div>
+																	<div class="form-group row">
+																		<label for="moc_image2"
+																			class="col-sm-2 col-form-label">Watermark</label>
+																		<div class="col-sm-10">
+																			<small class="form-text text-muted">Same as
+																				for title picture, only drop
+																				on the right side of the
+																				statcard.</small>
+																			<input type="file"
+																				class="form-control-file my-pond2"
+																				id="moc_image2" name="moc_image2" />
+																		</div>
+																	</div>
+
+																	<div class="form-group row">
+																		<label for="moc_image2_opacity"
+																			class="col-sm-2 col-form-label">Watermark
+																			Opacity</label>
+																		<div class="col-sm-10">
+																			<div class="input-group mb-3">
+																				<input type="number"
+																					class="form-control"
+																					aria-label="Watermark Opacity"
+																					aria-describedby="watermark-opacity"
+																					min="0" max="100" value="100"
+																					id="moc_image2_opacity"
+																					name="moc_image2_opacity"
+																					onchange="updateWatermarkOpacity()"
+																					onkeyup="updateWatermarkOpacity()" />
+																				<span class="input-group-text"
+																					id="basic-addon1">%</span>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="form-group row">
+																		<div class="col-sm-2">Damage Table</div>
+																		<div class="col-sm-10">
+																			<div class="form-check">
+																				<input class="form-check-input"
+																					type="checkbox"
+																					id="statcard_damagetable"
+																					name="statcard_damagetable"
+																					checked="checked"
+																					onchange="statcard.drawForeground()" />
+																				<label class="form-check-label"
+																					for="statcard_damagetable">Display a
+																					table denoting the
+																					effects the damage taken has on the
+																					construction instead of the
+																					one-liner describing the attributes
+																					like on the front side.</label>
+																			</div>
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</td>
+													</tr>
+												</tbody>
+												<thead>
+													<tr>
+														<th colspan="2"></th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+										<div class="container">
+
+											<p class="text-white">
+												Want to support my work and buy me a coffee? It's 100% optional.
+												<script type='text/javascript'
+													src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+												<script
+													type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#048f19', 'I3I1SPFPB'); kofiwidget2.draw();</script>
+											</p>
+											<p class="text-white">
+												Check out this repository on
+												<a class="text-white"
+													href="https://github.com/semillakan6/brikwars-statcard-gen">GitHub</a>.
+											</p>
+											<p class="text-white">
+												Check out the reoository for the OG on
+												<a class="text-white"
+													href="https://github.com/westnordost/brikwars-statcard-generator">GitHub</a>.
+											</p>
+
+											<p class="text-white">
+												The statcards generated here can be redistributed
+												under the
+												<a class="text-white"
+													href="https://brikwars.com/rules/2020/legal.htm#fairuse">same
+													conditions as the official BrikWars
+													material</a>.
+											</p>
+											<div class="help text-black text-center text-white">
+												<br />
+												&copy; Credits
+												<br />
+												2023-2024 Ruben Cuevas &lt;rcuemor@gmail.com&gt;
+												<br />
+												2014-2018 Tobias Zwick &lt;newton@westnordost.de&gt;
+												<br />
+												Poker card format statcard by Peter Sanderson, Other
+												artwork by Mike Rayhawk.
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+						<div id="exile"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="js/moc/unit_type.js"></script>
+	<script src="js/moc/enhancements.js"></script>
+	<script src="js/moc/moc.js"></script>
+	<script src="js/moc/structure.js"></script>
+	<script src="js/moc/weapons.js"></script>
+	<script src="js/moc/equipment.js"></script>
+	<script src="js/moc/specialities.js"></script>
+	<script src="js/moc/propulsion.js"></script>
+	<script src="js/moc/mind.js"></script>
+	<script src="js/moc/supernatural.js"></script>
+
+	<script src="js/libraries/webfont.js"></script>
+
+	<script src="js/statcard/tabledrawer.js"></script>
+	<script src="js/statcard/layouts.js"></script>
+	<script src="js/statcard/fontloader.js"></script>
+	<script src="js/statcard/statcard.js"></script>
+	<script src="js/statcard/titleimage.js"></script>
+	<script src="js/statcard/attributes_area.js"></script>
+	<script src="js/statcard/backside_area.js"></script>
+	<script>
+		clearForm();
+		displayIEWarning();
+	</script>
+</body>
+
+</html>

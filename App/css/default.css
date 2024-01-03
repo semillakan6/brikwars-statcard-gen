@@ -1,0 +1,326 @@
+
+html
+{
+	font-family: Calibri, sans-serif;
+}
+
+body
+{
+	margin: 0;
+	padding: 0;
+}
+
+table {
+	border: 1px solid rgb(189, 189, 189);
+	background-color: rgb(237, 240, 242, 0.8);
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10pt 0;
+}
+
+thead, tbody {
+	border: 1px solid #BDBDBD;
+}
+
+thead tr {
+	background-color: #CFD8DC;
+	font-size: 12pt;
+	border: 1px solid #BDBDBD;
+}
+
+th, td
+{
+	padding: 3pt;
+}
+
+thead tr+tr
+{
+	background-color: #ddd;
+	text-align: left;
+	font-size: 10pt;
+	border-bottom: 1px solid #999;
+}
+
+thead th
+{
+	text-align: center;
+}
+
+tbody th
+{
+	text-align: right;
+	vertical-align: top;
+	padding: 3pt 10pt;
+	background-color: #eee;
+	border-right: 1px solid #999;
+}
+
+tr.first td
+{
+	padding-bottom: 0;
+}
+
+tr.second td
+{
+	padding-top: 0;
+}
+
+.head
+{
+	font-weight: bold;
+	vertical-align: top;
+}
+
+.help
+{
+	color: #999;
+	font-style: italic;
+	font-size: 85%;
+	font-weight: normal;
+}
+
+.example
+{
+	font-size: 85%;
+	display: inline;
+}
+
+td.cost
+{
+	border-left: 1px solid #999;
+	padding-left: 1em;
+	width: 20pt;
+}
+
+td.notes
+{
+	border: 1px solid #999;
+}
+
+a
+{
+	font-size: 85%;
+	font-style: italic;
+	font-weight: normal;
+}
+
+h1
+{
+	text-align: center;
+	font-variant: small-caps;
+	font-family: Bevan;
+}
+
+#statcard_container
+{
+	position: relative;
+	text-align: center;
+}
+
+/* Large devices (desktops) */
+@media screen and (min-width: 768px) {
+	#statcard_container > div {
+	  margin-right: -4px;
+	  float: none;
+	  display: inline-block;
+	}
+  }
+  
+  
+  /* Small devices (tablets, phones) */
+  @media screen and (max-width: 767px) {
+	#statcard_container > div {
+	  margin-top: -6px;  /* Adjust for mobile */
+	  float: none;
+	  display: inline-block;
+	}
+  }
+
+#statcard_container > div > *, #exile > div > *
+{
+	position: absolute;
+	display: block;
+}
+
+.classic, .classic > *
+{
+	width: 356px;
+	height: 385px;
+}
+
+.poker, .poker > *
+{
+	width: 358px;
+	height: 488px;
+}
+
+.bg-img
+{
+	background-color: black;
+	background-image: url(../images/bg_img_2023.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+#content_container
+{
+	background-color: black;
+	background-image: url(../images/bg.jpg);
+	background-position: center top;
+	background-repeat: no-repeat;
+	background-size: 100% auto;
+	background-attachment: fixed;
+}
+
+#content
+{
+	border: none;
+	width: 100%;
+	margin: 0;
+	/*background: linear-gradient(rgba(0,0,0,1), rgba(0,0,0,0.75), rgba(0,0,0,0));*/
+	display: table;
+	table-layout: fixed;
+}
+
+#content_form
+{
+	width: 540pt;
+	padding: 12pt;
+	background-color: white;
+	display: table-cell;
+}
+
+.card.content {
+    /* This adjusts the transparency of card's background color */
+	background-color: rgba(247, 80, 71, 0.6);
+}
+
+#bg_left
+{
+	background-image: url(../images/2x2_black_left.png);
+	background-repeat: no-repeat;
+	background-position: right top;
+	display: table-cell;
+}
+
+#bg_right
+{
+	background-image: url(../images/2x2_black_right.png);
+	background-repeat: no-repeat;
+	background-position: left top;
+	display: table-cell;
+}
+
+#print_format
+{
+	position:absolute;
+	width: 350pt;
+	bottom: 20pt;
+	left: 95pt;
+	background-color: white;
+	box-shadow: 0 0pt 30pt 0 black;
+	padding: 10pt;
+}
+
+#print_format thead tr th
+{
+	background-color: #ccc;
+}
+
+#print_format thead tr+tr th
+{
+	background-color: #ddd;
+}
+
+#print_format td, #print_format th
+{
+	width: 50%;
+	vertical-align: top;
+	text-align: center;
+	border-left: 1px solid #999;
+	border-right: 1px solid #999;
+}
+
+#specialities table
+{
+	margin: 0;
+}
+
+.close
+{
+	float:right;
+	font-weight: bold;
+}
+
+#ie_warning
+{
+	display: none;
+	border: 1pt solid #DD0000;
+	background-color: #FFFFDD;
+	padding: 3pt;
+	text-align: center;
+}
+
+.inline-block {
+    display: inline-block !important;
+}
+
+.icon-td {
+    position: relative;
+    font-family: 'Alegreya', Georgia, "Times New Roman", Times, serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: #000;
+    min-height: 120px;
+    line-height: 120px; /* to center the text vertically */
+}
+
+.content {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.content span {
+    position: relative;
+    z-index: 1; /* Place the text above the image */
+}
+
+.icon {
+    position: absolute;
+    left: 0;
+    width: 60px;
+    height: 60px;
+    z-index: 0; /* Place the image beneath the text */
+}
+
+.armor .icon {
+    background: url('../images/attribute_icons/ico_50_armor_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.power .icon {
+    background: url('../images/attribute_icons/ico_50_power_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.move .icon {
+    background: url('../images/attribute_icons/ico_50_move_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.action .icon {
+    background: url('../images/attribute_icons/ico_50_action_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.value .icon {
+    background: url('../images/attribute_icons/ico_50_unit_inches_fill.png') no-repeat center;
+    background-size: cover;
+}
+
+.enhancement_table td {
+	vertical-align: middle;
+}
