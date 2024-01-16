@@ -4,6 +4,10 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 
+const iconPath = process.platform !== 'darwin'
+    ? 'img/favicon.ico'
+    : 'img/favicon.icns';
+
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
         width: 1320,
@@ -12,7 +16,7 @@ const createWindow = () => {
             preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: false
         },
-        icon: path.join(__dirname, 'img/favicon.ico')
+        icon: path.join(__dirname, iconPath)
     })
 
     // and load the index.html of the app.
