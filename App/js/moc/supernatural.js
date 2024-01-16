@@ -68,13 +68,18 @@ class SuperNaturalDie extends FuzzyDice {
 	}
 
 	static applyFrom(die, i) {
-		let amount = document.getElementById(`supernatural_dice_${i}_amount`).value;
-		amount = Math.max(1, Math.round(amount));
-		if (isNaN(amount)) amount = 1;
-		die.amount = amount;
-
-		const die_type = document.getElementById(`supernatural_dice_${i}_type`);
-		die.typeId = die_type.options[die_type.selectedIndex].value;
+		let inputAmount = document.getElementById(`supernatural_dice_${i}_amount`);
+		if (inputAmount){
+			let amount = inputAmount.value;
+			amount = Math.max(1, Math.round(amount));
+			if (isNaN(amount)) amount = 1;
+			die.amount = amount;
+		}
+	
+		let inputType = document.getElementById(`supernatural_dice_${i}_type`);
+		if (inputType){
+			die.typeId = inputType.options[inputType.selectedIndex].value;
+		}
 	}
 }
 
@@ -107,6 +112,7 @@ class SuperNatural {
 	}
 
 	add() {
+		
 		const i = this.dice.push(new SuperNaturalDie()) - 1;
 		const enabled = this.getFreeDiceTypeIds();
 
@@ -121,11 +127,30 @@ class SuperNatural {
 		this.append('notes', notesInput, i);
 		this.append('btn', button, i);
 		this.append('cost', costInput, i);
+
+		this.updateAllDieTypes(); 
 	}
 
 	remove(i) {
 		this.dice[i] = null;
 		document.getElementById(`supernatural_dice_${i}`).remove();
+		this.updateAllDieTypes();
+	
+		// Check if there are no more dice left
+		if (!this.getDiceCount()) {
+			// Uncheck the "supernatural" checkbox
+			let checkbox = document.querySelector('input[name="supernatural"]');
+			if (checkbox) {
+				checkbox.checked = false;
+				this.active = false;
+			}
+			
+			// Call calculate function if exists
+			// You need to make sure that it's defined in the same scope
+			if (typeof calculate === "function") {
+				calculate();
+			}
+		}
 	}
 
 	calculate() {
@@ -139,10 +164,14 @@ class SuperNatural {
 	getFreeDiceTypeIds() {
 		if (!superNaturalDice_types || !this.dice) return;
 		
+		let selectedDiceTypes = this.dice.map(die => die && die.typeId);
+		
 		return superNaturalDice_types.reduce((acc, curr, i) => {
-			if (!curr || !this.dice.every(die => die && die.typeId !== i)) return acc;
+			if (!curr) return acc;
 	
-			if (!curr.disabled) return { ...acc, [i]: true };
+			// Adjust this check
+			if (!curr.disabled && !selectedDiceTypes.includes(String(i))) 
+				return { ...acc, [i]: true };
 			else return acc;
 		}, {});
 	}
@@ -158,9 +187,32 @@ class SuperNatural {
 
 	}
 
+	updateAllDieTypes() {
+		this.dice.forEach((die, i) => {
+			if (die) {
+				let typeSelect = document.getElementById(`supernatural_dice_${i}_type`);
+				if (typeSelect) {
+					this.dice[i].typeId = typeSelect.options[typeSelect.selectedIndex].value;
+					
+					let enabled = this.getFreeDiceTypeIds();  // get fresh 'enabled' object
+					for (let j = 0; j < typeSelect.options.length; j++) {
+						if (j in enabled) {
+							typeSelect.options[j].disabled = false;
+						} else {
+							typeSelect.options[j].disabled = true;
+						}
+					}
+				}
+			}
+		})
+	}
+
 	applyFrom(form) {
 		this.active = form.supernatural.checked;
-		this.getDieTypes().forEach((die, i) => SuperNaturalDie.applyFrom(die, i));
+		this.dice.forEach((die, i) => {
+			if (die) SuperNaturalDie.applyFrom(die, i); //Apply changes only to existing dice
+		});
+		this.updateAllDieTypes(); 
 	}
 
 	supernaturalCount() {
@@ -174,22 +226,21 @@ class SuperNatural {
 		typeSelect.className = "form-select"; // Bootstrap class
 		typeSelect.onchange = () => calculate();
 		typeSelect.onkeyup = () => calculate();
-
+	
 		superNaturalDice_types.forEach((die_type, j) => {
 			const option = document.createElement("option");
 			option.text = `${die_type.die} (${die_type.name})`;
 			option.value = j;
-
+	
 			if (j in enabled) {
 				option.disabled = false;
 				this.dice[i].typeId = j;
 			} else {
 				option.disabled = true;
 			}
-
 			typeSelect.appendChild(option);
 		});
-
+	
 		return typeSelect;
 	}
 
@@ -262,17 +313,28 @@ class SuperNatural {
 	}
 
 	updateDieInfo(die, i) {
-		document.getElementById(`supernatural_dice_${i}_amount`).value = die.amount;
-		document.getElementById(`supernatural_dice_${i}_type`).selectedIndex = die.typeId;
-		document.getElementById(`supernatural_dice_${i}_cost`).value = die.cost();
-		document.getElementById(`supernatural_dice_${i}_notes`).value = die.note();
-
+		let amountInput = document.getElementById(`supernatural_dice_${i}_amount`)
+		let typeSelect = document.getElementById(`supernatural_dice_${i}_type`)
+		let costInput = document.getElementById(`supernatural_dice_${i}_cost`)
+		let notesInput = document.getElementById(`supernatural_dice_${i}_notes`)
+	
+		if(amountInput)
+			amountInput.value = die.amount;
+		if(typeSelect)
+			typeSelect.selectedIndex = die.typeId;
+		if(costInput)
+			costInput.value = die.cost();
+		if(notesInput)
+			notesInput.value = die.note();
+	
 		const enabled = this.getFreeDiceTypeIds();
 		enabled[die.typeId] = true;
-
-		const options = document.getElementById(`supernatural_dice_${i}_type`).options;
-		for (let j = 0; j < options.length; j++) {
-			options[j].disabled = !(options[j].value in enabled);
+	
+		if (typeSelect) {
+			const options = typeSelect.options;
+			for (let j = 0; j < options.length; j++) {
+				options[j].disabled = !(options[j].value in enabled);
+			}
 		}
 	}
 
@@ -281,3 +343,12 @@ class SuperNatural {
 	}
 }
 
+let supernaturalCheckbox = document.querySelector("input[name='supernatural']");
+
+supernaturalCheckbox.onchange = function() {
+  // When checkbox is checked
+  if (this.checked) {
+    moc.superNatural.addIfEmpty(); 
+  }
+  calculate(); // call calculate finally
+};
