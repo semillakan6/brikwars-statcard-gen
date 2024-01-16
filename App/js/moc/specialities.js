@@ -320,7 +320,7 @@ class Specialities {
                     <tr>
                         <th>Name</th>
                         <td>
-                            <input type='text' id='specialities_${i}_name' class='form-control'/>
+                            <input type='text' id='specialities_${i}_name' oninput="calculate();" class='form-control'/>
                         </td>
                         <td>
                             <button type='button' id='specialities_${i}_remove' class='btn btn-outline-danger'><i class='fas fa-trash'></i></button>
@@ -329,53 +329,67 @@ class Specialities {
                     <tr>
                         <th>Description</th>
                         <td>
-                            <textarea id='specialities_${i}_desc' class='form-control'></textarea>
+                            <textarea id='specialities_${i}_desc' oninput="calculate();" class='form-control'></textarea>
                         </td>
                         <td></td>
                     </tr>
                     <tr>
                         <th>Mention on front side</th>
                         <td>
-                            <select id='specialities_${i}_mention_in' class='form-control'> 
+                            <select id='specialities_${i}_mention_in' onchange="calculate();" class='form-control'> 
                                 <option value='no'>no</option>
                                 <option value='armor'>in armor field</option>
                                 <option value='move'>in move field</option>
                                 <option value='skill'>in skill field</option>
-                            </select> as <input type='text' id='specialities_${i}_shortname' class='form-control'/>
+                            </select> as <input type='text' id='specialities_${i}_shortname' oninput="calculate();" class='form-control'/>
                         </td>
                         <td></td>
                     </tr>
                 </table>
             </td>
             <td class='cost'>
-                <input type='text' size='1' id='specialities_${i}_cost' class='form-control'/>
+                <input type='text' size='1' id='specialities_${i}_cost' oninput="calculate();" class='form-control'/>
             </td>`;
   }
 
   _appendRow(row, i) {
     document.getElementById("specialities").appendChild(row);
-
+  
     // add Event listeners
     document
       .getElementById(`specialities_${i}_name`)
-      .addEventListener("change", this.calculate);
+      .addEventListener("input", () => {
+        this.calculate();
+      });
+  
     document
       .getElementById(`specialities_${i}_desc`)
-      .addEventListener("change", this.calculate);
+      .addEventListener("input", () => {
+        this.calculate();
+      });
+  
     document
       .getElementById(`specialities_${i}_shortname`)
-      .addEventListener("change", this.calculate);
+      .addEventListener("change", () => {
+        this.calculate();
+      });
+  
     document
       .getElementById(`specialities_${i}_mention_in`)
-      .addEventListener("change", this.calculate);
+      .addEventListener("change", () => {
+        this.calculate();
+      });
+  
     document
       .getElementById(`specialities_${i}_cost`)
-      .addEventListener("change", this.calculate);
+      .addEventListener("input", () => {
+        this.calculate();
+      });
     document
       .getElementById(`specialities_${i}_remove`)
       .addEventListener("click", () => {
         this.remove(i);
-        calculate();
+        this.calculate();
       });
   }
 
