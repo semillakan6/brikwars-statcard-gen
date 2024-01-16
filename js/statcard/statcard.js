@@ -217,6 +217,10 @@ class Statcard {
 					specialitiesInfo.push(incompetentSpeciality);
 				}
 			}
+			if($("#txtMindTotal").val() != 0){
+				const extraMindsSpeciality = buildExtraMindsSpeciality($("#txtMindTotal").val());
+				specialitiesInfo.push(extraMindsSpeciality);
+			}
 		
 			return specialitiesInfo;
 		};
