@@ -233,7 +233,6 @@ class Statcard {
 		
 			return description + " to produce SuperNatural effects appropriate to its Cliché each turn.";
 		}
-		//Optimized up to here
 
 		this.drawSpecialities = function (ctx) {
 			const { title, text, more } = this.layout.front.specialities;
