@@ -137,8 +137,14 @@ class SuperNatural {
 	}
 
 	getFreeDiceTypeIds() {
-		return superNaturalDice_types.reduce(
-			(acc, curr, i) => !curr.disabled && this.dice.every(die => die.typeId !== i) ? { ...acc, [i]: true } : acc, {});
+		if (!superNaturalDice_types || !this.dice) return;
+		
+		return superNaturalDice_types.reduce((acc, curr, i) => {
+			if (!curr || !this.dice.every(die => die && die.typeId !== i)) return acc;
+	
+			if (!curr.disabled) return { ...acc, [i]: true };
+			else return acc;
+		}, {});
 	}
 
 	updateForm(form) {
