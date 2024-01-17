@@ -132,21 +132,21 @@ class SuperNatural {
 	}
 
 	remove(i) {
-		this.dice[i] = null;
+		this.dice.splice(i, 1);
 		document.getElementById(`supernatural_dice_${i}`).remove();
 		this.updateAllDieTypes();
 	
 		// Check if there are no more dice left
 		if (!this.getDiceCount()) {
+			
 			// Uncheck the "supernatural" checkbox
 			let checkbox = document.querySelector('input[name="supernatural"]');
 			if (checkbox) {
 				checkbox.checked = false;
 				this.active = false;
 			}
-			
+	
 			// Call calculate function if exists
-			// You need to make sure that it's defined in the same scope
 			if (typeof calculate === "function") {
 				calculate();
 			}
@@ -258,7 +258,7 @@ class SuperNatural {
 	}
 
 	createNotesInput(i) {
-		const notesInput = document.createElement("input");
+		const notesInput = document.createElement("textarea");
 		notesInput.disabled = true;
 		notesInput.id = `supernatural_dice_${i}_notes`;
 		notesInput.className = "form-control"; // Bootstrap class
