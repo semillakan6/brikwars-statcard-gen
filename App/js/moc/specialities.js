@@ -168,7 +168,7 @@ let specialities_templates = {
       name: "Megalomania (+1Ü)",
       description:
         "Can ScapeGoat subordinate units; Can make a Great Speech to convert casualties into Outrage Bennies.",
-      cost: 1,
+      cost: 2,
     },
   },
 };
