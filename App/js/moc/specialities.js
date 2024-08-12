@@ -171,6 +171,20 @@ let specialities_templates = {
       cost: 2,
     },
   },
+  Monsters: {
+    bigfig: {
+      name: "Bigfig", 
+      description: "The bigfig is a combat monster, as strong as a Horse and with the extra combat punch of an 1d8.",
+      cost: 0,
+    },
+    brutefig: {
+      name: "Brutefig",
+      shortname: "Stupidity",
+      mention: "skill",
+      description: "Brutefigs have a standard Action d6 Mind, but they have enhanced opportunities for Stupidity as if they were Incompetent.",
+      cost: 0,
+    },
+  },
 };
 
 $(document).ready(function () {

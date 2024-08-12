@@ -30,6 +30,7 @@ class Moc {
 	calculateCost() {
 		this.cost = this.structure.cost; 
 		this.cost += this.superNatural.cost;
+		this.cost += this.specialities.cost;
 		// add other cost considerations here
 	}
 
