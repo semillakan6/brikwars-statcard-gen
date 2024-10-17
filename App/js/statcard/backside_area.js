@@ -249,6 +249,18 @@ class BacksideArea {
 					ctx.font = this.font();
 					yoffset += this.drawWrappedText(ctx, desc, ypos + yoffset);
 				}
+				if (eqTypes[i][0].name() == "Light Armor") {
+					var desc = "A minifig wearing Light Armor gets +2 to Armor against all incoming damage (but not for internal damage, like the effects of having been Poisoned).";
+
+					ctx.font = this.font();
+					yoffset += this.drawWrappedText(ctx, desc, ypos + yoffset);
+				}
+				if (eqTypes[i][0].name() == "Heavy Armor") {
+					var desc = "A minifig wearing Heavy Armor is even better protected granting them Deflection, but has a harder time moving around.";
+
+					ctx.font = this.font();
+					yoffset += this.drawWrappedText(ctx, desc, ypos + yoffset);
+				}
 				yoffset += statcard.layout.back.paragraphSpacing;
 			}
 			return yoffset;

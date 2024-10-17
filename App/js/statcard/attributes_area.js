@@ -173,11 +173,15 @@ class AttributesArea {
 
       const energyShield = moc.equipment.getEnergyShieldStrength();
       const armorPlating = moc.equipment.hasArmorPlating();
+      const lightArmor = moc.equipment.hasLightArmor();
+      const heavyArmor = moc.equipment.hasHeavyArmor();
       const deflection = moc.equipment.hasDeflection();
 
       const fields = moc.specialities.getArmorFieldTexts();
       if (deflection) fields.unshift("Deflection");
       if (armorPlating) fields.unshift("Armor Plating");
+      if (lightArmor) fields.unshift("+2");
+      if (heavyArmor) fields.unshift("Deflection");
       if (energyShield > 0) fields.unshift(energyShield + "x Energy Shield");
 
       const subTextOffset =

@@ -5,9 +5,9 @@ let equipment_types = [
 		sizeCost: 1,
 		baseCost: 0,
 		usePower: true,
-		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/draft/f.htm#energyshields\">Chapter F: Field Hazards</a>)",
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>)",
 	},
-	{
+	/*{
 		name: "Armor Plating",
 		notes: "Covered area is shielded",
 		strength: 1,
@@ -15,6 +15,24 @@ let equipment_types = [
 		baseCost: 1,
 		armorPlate: true,
 		remark: "No aerial flight or alternate forms of Movement possible. The cost of Move inches is doubled. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/3.htm#bodyarmor\">Chapter 3: Minifig Weapons</a>)",
+	},*/
+	{
+		name: "Light Armor",
+		notes: "+2 to Armor against all incoming damage (but not for internal damage).",
+		strength: 1,
+		sizeCost: 1,
+		baseCost: 1,
+		lightArmor: true,
+		remark: "Wearer can't swim.",
+	},
+	{
+		name: "Heavy Armor",
+		notes: "Has Deflection against the blow.",
+		strength: 1,
+		sizeCost: 1,
+		baseCost: 1,
+		heavyArmor: true,
+		remark: "Half Speed, wearer can't swim.",
 	}
 ];
 
@@ -54,6 +72,14 @@ class Equipment {
 
 		this.isArmorPlate = function () {
 			return equipment_types[this.typeId].armorPlate;
+		};
+		
+		this.isLightArmor = function () {
+			return equipment_types[this.typeId].lightArmor;
+		};
+
+		this.isHeavyArmor = function () {
+			return equipment_types[this.typeId].heavyArmor;
 		};
 	}
 };
@@ -305,6 +331,28 @@ function Equipments(moc) {
 			if (!equipment) continue;
 
 			if (equipment.isArmorPlate())
+				return true;
+		}
+		return false;
+	};
+	
+	this.hasLightArmor = function () {
+		for (i = 0; i < this.stuff.length; i++) {
+			var equipment = this.stuff[i];
+			if (!equipment) continue;
+
+			if (equipment.isLightArmor())
+				return true;
+		}
+		return false;
+	};
+
+	this.hasHeavyArmor = function () {
+		for (i = 0; i < this.stuff.length; i++) {
+			var equipment = this.stuff[i];
+			if (!equipment) continue;
+
+			if (equipment.isHeavyArmor())
 				return true;
 		}
 		return false;

@@ -20,19 +20,19 @@ let specialities_templates = {
       mention: "skill",
       description:
         "All Workers are Half-Minded - either Programmed, Submissive, or Subjugated. \nImproves Action Die to 1d6 for specific job-related tasks",
-      cost: 0.5,
+      cost: -0.5,
     },
     cannon_fodder: {
       name: "Irrelevant",
       description:
         "Attacks do 1 point of Damage; Actions never go Over the Top; Effective Size 0''; unit can Respawn endlessly but it doesn't matter.",
-      cost: 0.5,
+      cost: -0.5,
     },
     skirmisher: {
       name: "Harassment",
       description:
         "Unit can Disengage from Close Combat freely without drawing Counterattacks.",
-      cost: 1,
+      cost: 0,
     },
     scout: {
       name: "Pathfinding/Tracking",
@@ -41,31 +41,31 @@ let specialities_templates = {
       description:
         "1d8 Action when rolling vs. Field Hazards; stops safely before setting off Concealed Hazards for self and others. \n \
 		Automatically detects hidden or invisible units, Traps, and Triggers; allows Marking of a target for allied visibility and a +1 Action Bonus to Ranged Attacks.",
-      cost: 1,
+      cost: 0,
     },
     phalanx: {
       name: "Shield Wall",
       description:
         "Units can cooperate to form a shield wall, automatically Parrying all damage from one direction.",
-      cost: 1,
+      cost: 0,
     },
     marksman: {
       name: "Aiming",
       description:
         "Can Aim a Ranged attack as a full-turn Action, using a Specialty 1d8 to replace the Action Roll, replace a Damage die, or to add inches to Range.",
-      cost: 1,
+      cost: 0,
     },
     sniper: {
       name: "Sniping",
       description:
         "Can Snipe with a scoped Long-Ranged Weapon as a full-turn Action, Automatically Hitting targets at least 5'' away.",
-      cost: 1,
+      cost: 0,
     },
     heavy: {
       name: "Compensating",
       description:
         "When standing still, can use weapons 1'' larger than normally allowed.",
-      cost: 1,
+      cost: 0,
     },
   },
   Operators: {
@@ -87,14 +87,14 @@ let specialities_templates = {
       name: "Gunnery (1d8)",
       description:
         "Action Specialty d8 with mounted weapons; allows Gunnery Support Action.",
-      cost: 1,
+      cost: 0,
     },
   },
   Support: {
     tek: {
       name: "Assistance",
       description: "Use Action to boost another Specialist's Specialty die",
-      cost: 1,
+      cost: 0,
     },
     mechanik: {
       name: "Mechanikal Aptitude (1d8)",
@@ -102,7 +102,7 @@ let specialities_templates = {
       mention: "skill",
       description:
         "Allows a Construction Action to build or repair creations on enemy turns within a radius of Specialty d8 inches.",
-      cost: 1,
+      cost: 0,
     },
     engineer: {
       name: "Rationalism (1d8)",
@@ -110,7 +110,7 @@ let specialities_templates = {
       mention: "skill",
       description:
         "Allows a Construction Action to Rationalize Specialty d8 modifications to existing objects and devices. (See Table of Rationalizations)",
-      cost: 1,
+      cost: 0,
     },
     medik: {
       name: "Ker-Triage! (1d8)",
@@ -118,13 +118,13 @@ let specialities_templates = {
       mention: "skill",
       description:
         "Allows a Construction Action to roll Specialty d8 (or a d6 if he's improvising without proper tools) on the Ker-Triage! Table to revive fallen minifigs and creatures. \nIf the Medik's Construction Action is interrupted, he still makes the Ker-Triage! Roll and removes the number of limbs indicated, but the patient is not revived. ",
-      cost: 1,
+      cost: 0,
     },
     cybernetik: {
       name: "Mad Science (1d6)",
       description:
         "Allows a Construction Action to combine mechanikal and biologikal creations within Specialty d6 inches",
-      cost: 1,
+      cost: 0,
     },
   },
   "Elite Units": {
@@ -132,13 +132,13 @@ let specialities_templates = {
       name: "Field Training",
       description:
         "Can copy any ally's Specialty marked with a Specialty die, using a Specialty die one size smaller",
-      cost: 1,
+      cost: 0,
     },
     hero: {
       name: "Heroic Ego (+1Ü)",
       description:
         "Can take one Heroic Feat per turn appropriate to his Cliché; can inspire nearby friendly units (within an 1d10 Roll worth of inches) to RedShirt and take damage meant for the Hero; becomes Cranky in the presence of other Heroic units or items",
-      cost: 2,
+      cost: 0,
     },
   },
   "Command Units": {
@@ -148,7 +148,7 @@ let specialities_templates = {
       mention: "skill",
       description:
         "Can spend an Action to improve the Action Dice of his Squad mates by one die size, up to 1d8, for one combined Action",
-      cost: 1,
+      cost: 0,
     },
     leader: {
       name: "Inspiration (1d6)",
@@ -156,19 +156,19 @@ let specialities_templates = {
       mention: "skill",
       description:
         "Can spend an Action and use a Motivational Tool to grant a Specialty d6 Action re-roll or to add Specialty d6 to an attribute for a target unit or Squad",
-      cost: 1,
+      cost: 0,
     },
     commander: {
       name: "Strategic Intervention",
       description:
         "Can spend an Action and use a communications Tool to gain one Strategy brick after witnessing a successful kill, or to spend Strategy bricks on Strategic Interventions.",
-      cost: 1,
+      cost: 0,
     },
     great_leader: {
       name: "Megalomania (+1Ü)",
       description:
         "Can ScapeGoat subordinate units; Can make a Great Speech to convert casualties into Outrage Bennies.",
-      cost: 2,
+      cost: 0,
     },
   },
   Monsters: {
