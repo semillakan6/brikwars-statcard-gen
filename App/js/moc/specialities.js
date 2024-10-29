@@ -39,14 +39,13 @@ let specialities_templates = {
       shortname: "1d8 vs FH",
       mention: "skill",
       description:
-        "1d8 Action when rolling vs. Field Hazards; stops safely before setting off Concealed Hazards for self and others. \n \
-		Automatically detects hidden or invisible units, Traps, and Triggers; allows Marking of a target for allied visibility and a +1 Action Bonus to Ranged Attacks.",
+        "1d8 Action when rolling vs. Field Hazards; stops safely before setting off Concealed Hazards for self and others. \nAutomatically detects hidden or invisible units, Traps, and Triggers. \nAllows Marking of a target for allied visibility and a +1 Action Bonus to Ranged Attacks.",
       cost: 0,
     },
     phalanx: {
       name: "Shield Wall",
       description:
-        "Units can cooperate to form a shield wall, automatically Parrying all damage from one direction.",
+        "Units can cooperate to form a shield wall, automatically Parrying all damage from one direction. \nSpecialty: March \nMarching in formation ignore movement penalties from Heavy Armor while walking. \nIf a Marching minifig is in a Squad with at least one other Marching minifig, they can March in formation, walking at normal speed and ignoring Movement penalties from Heavy Armor.",
       cost: 0,
     },
     marksman: {
@@ -143,7 +142,7 @@ let specialities_templates = {
   },
   "Command Units": {
     officer: {
-      name: "Coordination (1d6)",
+      name: "Coordination (1d8)",
       shortname: "1d8 Coordination",
       mention: "skill",
       description:
@@ -173,15 +172,17 @@ let specialities_templates = {
   },
   Monsters: {
     bigfig: {
-      name: "Bigfig", 
-      description: "The bigfig is a combat monster, as strong as a Horse and with the extra combat punch of an 1d8.",
+      name: "Bigfig",
+      description:
+        "The bigfig is a combat monster, as strong as a Horse and with the extra combat punch of an 1d8.",
       cost: 0,
     },
     brutefig: {
       name: "Brutefig",
       shortname: "Stupidity",
       mention: "skill",
-      description: "Brutefigs have a standard Action d6 Mind, but they have enhanced opportunities for Stupidity as if they were Incompetent.",
+      description:
+        "Brutefigs have a standard Action d6 Mind, but they have enhanced opportunities for Stupidity as if they were Incompetent.",
       cost: 0,
     },
   },
@@ -261,16 +262,76 @@ class Specialities {
   }
 
   remove(i) {
+    console.log("Before removal:", this.stuff);
+    // Remove the speciality from the array
     this.stuff.splice(i, 1);
 
+    // Remove the row element from the DOM
     const node = document.getElementById(`specialities_${i}`);
-    node.parentNode.removeChild(node);
+    if (node) {
+      node.parentNode.removeChild(node);
+    }
+
+    // Re-index the IDs of the remaining rows and their child elements
+    for (let j = i; j < this.stuff.length; j++) {
+      const nextRow = document.getElementById(`specialities_${j + 1}`); // Get the next row
+      if (nextRow) {
+        // Update the row's ID
+        nextRow.id = `specialities_${j}`;
+
+        // Update the child element IDs
+        const newIndex = j; // use new index for naming
+        nextRow.querySelector(
+          '[id^="specialities_"]'
+        ).id = `specialities_${newIndex}_name`;
+        nextRow.querySelector(
+          '[id^="specialities_"][id$="_desc"]'
+        ).id = `specialities_${newIndex}_desc`;
+        nextRow.querySelector(
+          '[id^="specialities_"][id$="_cost"]'
+        ).id = `specialities_${newIndex}_cost`;
+        nextRow.querySelector(
+          '[id^="specialities_"][id$="_shortname"]'
+        ).id = `specialities_${newIndex}_shortname`;
+        nextRow.querySelector(
+          '[id^="specialities_"][id$="_mention_in"]'
+        ).id = `specialities_${newIndex}_mention_in`;
+        nextRow.querySelector(
+          '[id^="specialities_"][id$="_remove"]'
+        ).id = `specialities_${newIndex}_remove`;
+      }
+    }
+
+    // Recalculate costs after removing a row
+    this.calculate();
+
+    // Update remaining rows' values
+    this.stuff.forEach((speciality, index) => {
+      const nameInput = document.getElementById(`specialities_${index}_name`);
+      const descInput = document.getElementById(`specialities_${index}_desc`);
+      const costInput = document.getElementById(`specialities_${index}_cost`);
+      const shortnameInput = document.getElementById(
+        `specialities_${index}_shortname`
+      );
+      const mentionInInput = document.getElementById(
+        `specialities_${index}_mention_in`
+      );
+
+      // Safely update speciality fields if elements exist
+      if (nameInput) speciality.name = nameInput.value;
+      if (descInput) speciality.description = descInput.value;
+      if (costInput) speciality.cost = costInput.value;
+      if (shortnameInput) speciality.shortname = shortnameInput.value;
+      if (mentionInInput) speciality.mention_in = mentionInInput.value;
+    });
+
+    console.log("After removal:", this.stuff);
   }
 
   calculate() {
     this.cost = 0;
     for (let speciality of this.stuff) {
-      speciality.cost = Math.round(parseFloat(speciality.cost) * 2) / 2;
+      speciality.cost = Math.round(parseFloat(speciality.cost || 0) * 2) / 2;
       if (isNaN(speciality.cost)) {
         speciality.cost = 0;
       }
@@ -282,17 +343,32 @@ class Specialities {
     for (let i = 0; i < this.stuff.length; ++i) {
       let speciality = this.stuff[i];
 
-      speciality.name = document.getElementById(`specialities_${i}_name`).value;
-      speciality.description = document.getElementById(
-        `specialities_${i}_desc`
-      ).value;
-      speciality.cost = document.getElementById(`specialities_${i}_cost`).value;
-      speciality.shortname = document.getElementById(
+      // Ensure the element exists before trying to access its value
+      let nameInput = document.getElementById(`specialities_${i}_name`);
+      let descInput = document.getElementById(`specialities_${i}_desc`);
+      let costInput = document.getElementById(`specialities_${i}_cost`);
+      let shortnameInput = document.getElementById(
         `specialities_${i}_shortname`
-      ).value;
-      speciality.mention_in = document.getElementById(
+      );
+      let mentionInInput = document.getElementById(
         `specialities_${i}_mention_in`
-      ).selectedIndex;
+      );
+
+      if (
+        nameInput &&
+        descInput &&
+        costInput &&
+        shortnameInput &&
+        mentionInInput
+      ) {
+        speciality.name = nameInput.value;
+        speciality.description = descInput.value;
+        speciality.cost = costInput.value;
+        speciality.shortname = shortnameInput.value;
+        speciality.mention_in = mentionInInput.selectedIndex;
+      } else {
+        console.warn(`Row ${i} elements not found. Ensure proper indexing.`);
+      }
     }
   }
 
@@ -368,32 +444,32 @@ class Specialities {
 
   _appendRow(row, i) {
     document.getElementById("specialities").appendChild(row);
-  
+
     // add Event listeners
     document
       .getElementById(`specialities_${i}_name`)
       .addEventListener("input", () => {
         this.calculate();
       });
-  
+
     document
       .getElementById(`specialities_${i}_desc`)
       .addEventListener("input", () => {
         this.calculate();
       });
-  
+
     document
       .getElementById(`specialities_${i}_shortname`)
       .addEventListener("change", () => {
         this.calculate();
       });
-  
+
     document
       .getElementById(`specialities_${i}_mention_in`)
       .addEventListener("change", () => {
         this.calculate();
       });
-  
+
     document
       .getElementById(`specialities_${i}_cost`)
       .addEventListener("input", () => {
@@ -403,7 +479,7 @@ class Specialities {
       .getElementById(`specialities_${i}_remove`)
       .addEventListener("click", () => {
         this.remove(i);
-        this.calculate();
+        calculate();
       });
   }
 
@@ -446,19 +522,37 @@ class Specialities {
   }
 
   _updateFormForSpeciality(i, speciality) {
-    document.getElementById(`specialities_${i}_name`).value = speciality.name;
-    document.getElementById(`specialities_${i}_cost`).value = speciality.cost;
-    document.getElementById(`specialities_${i}_shortname`).value =
-      speciality.shortname;
-    document.getElementById(`specialities_${i}_mention_in`).selectedIndex =
-      speciality.mention_in;
+    const nameInput = document.getElementById(`specialities_${i}_name`);
+    const costInput = document.getElementById(`specialities_${i}_cost`);
+    const shortnameInput = document.getElementById(
+      `specialities_${i}_shortname`
+    );
+    const mentionInInput = document.getElementById(
+      `specialities_${i}_mention_in`
+    );
+    const descInput = document.getElementById(`specialities_${i}_desc`);
 
-    document.getElementById(`specialities_${i}_shortname`).disabled =
-      speciality.mention_in == 0;
+    if (
+      nameInput &&
+      costInput &&
+      shortnameInput &&
+      mentionInInput &&
+      descInput
+    ) {
+      nameInput.value = speciality.name;
+      costInput.value = speciality.cost;
+      shortnameInput.value = speciality.shortname;
+      mentionInInput.selectedIndex = speciality.mention_in;
 
-    const speciality_desc = document.getElementById(`specialities_${i}_desc`);
-    speciality_desc.value = speciality.description;
-    speciality_desc.style.height = "0px";
-    speciality_desc.style.height = speciality_desc.scrollHeight + "px";
+      // Disable the shortname input if mention_in equals 0
+      shortnameInput.disabled = speciality.mention_in == 0;
+
+      // Adjust the description input's height based on content
+      descInput.value = speciality.description;
+      descInput.style.height = "0px";
+      descInput.style.height = descInput.scrollHeight + "px";
+    } else {
+      console.warn(`Speciality form elements for index ${i} not found.`);
+    }
   }
 }

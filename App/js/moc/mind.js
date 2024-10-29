@@ -19,6 +19,7 @@ class HalfMindType extends MindType {
 // Define the mind types
 const mind_types = [
     new MindType("Select an Option...", "", 0, ""),
+    new MindType("High Command", "1d4", 0, "a leader or great leader"),
     new MindType("Trained", "1d6", 0, "standard trooper"),
     new MindType("Expert", "1d8", 0, "specialist, officer or veteran"),
     new MindType("Heroic", "1d10", 0, "hero"),

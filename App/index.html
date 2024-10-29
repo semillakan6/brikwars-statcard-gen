@@ -9,6 +9,21 @@
 
 	<!-- Webpage description for SEO purposes -->
 	<meta name="description" content="BrikWars 2023: A statcard generator for your fiercest Brik battles." />
+	<meta http-equiv="Content-Security-Policy" content="
+	default-src 'self'; 
+	script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://ajax.googleapis.com https://storage.ko-fi.com;
+	style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com;
+	font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;
+	img-src 'self' data: https://*;
+	connect-src 'self';
+	object-src 'none';
+	base-uri 'self';
+	form-action 'self';
+	upgrade-insecure-requests;
+	">
+
+
+
 
 	<!-- Assigns a default name to the browser's tab -->
 	<title>BrikWars 2023 Statcard Generator</title>
@@ -27,7 +42,7 @@
 	<link href="node_modules\filepond\dist\filepond.min.css" rel="stylesheet" />
 
 	<!-- JavaScript for interactive elements -->
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+	<script crossorigin src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
 		integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
 		crossorigin="anonymous"></script>
 
@@ -290,7 +305,8 @@
 																			<div class="content">
 																				<div class="icon"></div>
 																				<span>Armor</span>
-																				<div style="display: flex; flex-direction: row; align-items: center; justify-content: start;">
+																				<div
+																					style="display: flex; flex-direction: row; align-items: center; justify-content: start;">
 																					<input type="text"
 																						class="form-control ms-3"
 																						style="width: 70%"
@@ -298,7 +314,8 @@
 																						name="txtAmorTotal" value="1d6"
 																						disabled />
 																					<span id="deflectionStatus"
-																						name="deflectionStatus" style="font-family: Calibri, sans-serif !important; font-size: 15px;">
+																						name="deflectionStatus"
+																						style="font-family: Calibri, sans-serif !important; font-size: 15px;">
 																						<img src="images/attribute_icons/ico_50_armor_fill.png"
 																							alt="Shield icon"
 																							width="18%" />
