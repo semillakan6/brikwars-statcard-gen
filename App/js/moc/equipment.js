@@ -1,11 +1,51 @@
 let equipment_types = [
 	{
-		name: "Energy Shield",
-		notes: "x energy shield dice",
+		name: "D4 Energy Shield",
+		notes: "x energy D4 shield dice",
 		sizeCost: 1,
 		baseCost: 0,
 		usePower: true,
-		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>)",
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation, Shield size (amount) dictates the number of shield dice available (strength), and it can only stop a dice equal to the shields dice. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>).",
+	},
+	{
+		name: "D6 Energy Shield",
+		notes: "x energy D6 shield dice",
+		sizeCost: 1,
+		baseCost: 0,
+		usePower: true,
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation, Shield size (amount) dictates the number of shield dice available (strength), and it can only stop a dice equal to the shields dice. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>).",
+	},
+	{
+		name: "D8 Energy Shield",
+		notes: "x energy D8 shield dice",
+		sizeCost: 1,
+		baseCost: 0,
+		usePower: true,
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation, Shield size (amount) dictates the number of shield dice available (strength), and it can only stop a dice equal to the shields dice. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>).",
+	},
+	{
+		name: "D10 Energy Shield",
+		notes: "x energy D10 shield dice",
+		sizeCost: 1,
+		baseCost: 0,
+		usePower: true,
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation, Shield size (amount) dictates the number of shield dice available (strength), and it can only stop a dice equal to the shields dice. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>).",
+	},
+	{
+		name: "D12 Energy Shield",
+		notes: "x energy D12 shield dice",
+		sizeCost: 1,
+		baseCost: 0,
+		usePower: true,
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation, Shield size (amount) dictates the number of shield dice available (strength), and it can only stop a dice equal to the shields dice. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>).",
+	},
+	{
+		name: "D20 Energy Shield",
+		notes: "x energy D20 shield dice",
+		sizeCost: 1,
+		baseCost: 0,
+		usePower: true,
+		remark: "The shield must be created by a Shield Projector somewhere on the surface of the Creation, Shield size (amount) dictates the number of shield dice available (strength), and it can only stop a dice equal to the shields dice. (<a  target=\"_blank\" class=\"ref\" href=\"https://brikwars.com/rules/2020/f.htm#energyshields\">Chapter F: Field Hazards</a>).",
 	},
 	/*{
 		name: "Armor Plating",
@@ -310,6 +350,9 @@ function Equipments(moc) {
 			var strength = document.getElementById("equipment_" + i + "_strength").value;
 			strength = Math.min(size, Math.max(1, Math.round(strength)));
 			if (isNaN(strength)) strength = 1;
+			if (strength < size) {
+				strength = size;
+			}
 			equipment.selectedStrength = strength;
 
 			var equipment_type = document.getElementById("equipment_" + i + "_type");
@@ -366,15 +409,11 @@ function Equipments(moc) {
 	};
 
 	this.getEnergyShieldStrength = function () {
-		var count = 0;
-		for (i = 0; i < this.stuff.length; i++) {
-			var equipment = this.stuff[i];
-			if (!equipment) continue;
-
-			if (equipment.name() == "Energy Shield")
-				count += equipment.strength();
-		}
-		return count;
-	}
+		return this.stuff.reduce((total, equipment) => {
+			return equipment && equipment.name() === "Energy Shield"
+				? total + equipment.strength()
+				: total;
+		}, 0);
+	};
 
 };

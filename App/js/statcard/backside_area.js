@@ -229,20 +229,23 @@ class BacksideArea {
 				ctx.fillText(eqTypes[i][0].name(), statcard.layout.back.x, ypos + yoffset, statcard.layout.back.wdt);
 				yoffset += statcard.layout.back.headingSpacing;
 
-				if (eqTypes[i][0].name() == "Energy Shield") {
-					var desc = "This unit has ";
+				if (eqTypes[i][0].name().includes("Energy Shield")) {
+					var desc = "This unit has a size ";
 					var totalStrength = 0;
+				
 					for (var j = 0; j < eqTypes[i].length; ++j) {
 						var eq = eqTypes[i][j];
-						var comma = j == 0 ? "" : (j + 1 == eqTypes[i].length ? " and " : ", ");
-						desc += comma + "" + eq.size + " energy shield projectors (" + toRoman(eq.strength()) + ")";
+						var comma = j === 0 ? "" : (j + 1 === eqTypes[i].length ? " and " : ", ");
+						desc += comma + eq.size + " energy shield projector (" + toRoman(eq.strength()) + ")";
 						totalStrength += eq.strength();
 					}
-					desc += ", giving it a total of " + totalStrength + " energy shield dice to spend each turn.";
-
+				
+					desc += ", giving it a total of " + totalStrength + eqTypes[i][0].name() +" dice to spend each turn.";
+				
 					ctx.font = this.font();
 					yoffset += this.drawWrappedText(ctx, desc, ypos + yoffset);
 				}
+
 				if (eqTypes[i][0].name() == "Armor Plating") {
 					var desc = "The Armor Plated areas are granted the Shielded status.";
 
