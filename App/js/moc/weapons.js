@@ -362,6 +362,38 @@ let weapon_types =
 			size: 1.5,
 			notes: "Parry or Shove only, can Parry Charge attacks, can provide cover"
 		},
+		{
+			name: "Wand",
+			category: "Weapon",
+			sizeCost: 0,
+			baseCost: 0,
+			sizeUse: 0,
+			baseUse: 2,
+			sizeRange: 0,
+			baseRange: "CC or 6''",
+			damage: "-",
+			damageMulSize: false,
+			usePower: true,
+			forMinifigs: true,
+			size: 1,
+			notes: "extends the reach of SuperNatural Effects by touch, melee attack, or ranged attack"
+		},
+		{
+			name: "Staff",
+			category: "Weapon",
+			sizeCost: 0,
+			baseCost: 0,
+			sizeUse: 0,
+			baseUse: 3,
+			sizeRange: 0,
+			baseRange: "CC or 6''",
+			damage: "-",
+			damageMulSize: false,
+			usePower: true,
+			forMinifigs: true,
+			size: 2,
+			notes: "extends the reach of SuperNatural Effects by touch, melee attack, or ranged attack"
+		},
 
 	];
 
