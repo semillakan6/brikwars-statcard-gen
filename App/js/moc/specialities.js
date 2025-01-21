@@ -137,7 +137,7 @@ let specialities_templates = {
       name: "Heroic Ego (+1Ü)",
       description:
         "Can take one Heroic Feat per turn appropriate to his Cliché; can inspire nearby friendly units (within an 1d10 Roll worth of inches) to RedShirt and take damage meant for the Hero; becomes Cranky in the presence of other Heroic units or items",
-      cost: 0,
+      cost: 1,
     },
   },
   "Command Units": {
@@ -167,7 +167,7 @@ let specialities_templates = {
       name: "Megalomania (+1Ü)",
       description:
         "Can ScapeGoat subordinate units; Can make a Great Speech to convert casualties into Outrage Bennies.",
-      cost: 0,
+      cost: 1,
     },
   },
   Monsters: {

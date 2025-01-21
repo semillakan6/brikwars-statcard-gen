@@ -386,7 +386,7 @@ let weapon_types =
 			sizeUse: 0,
 			baseUse: 3,
 			sizeRange: 0,
-			baseRange: "CC or 6''",
+			baseRange: "CC or 10''",
 			damage: "-",
 			damageMulSize: false,
 			usePower: true,

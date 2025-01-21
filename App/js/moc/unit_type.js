@@ -72,11 +72,11 @@ $(document).ready(function () {
         power_impairmentCheckDefault(false, false);
         break;
       case "hero_minifig":
-        setSelectedValues("2", true, true, "2d6", "2", true, true, 7, 0);
+        setSelectedValues("1", true, true, "2d6", "2", true, true, 7, 0);
         power_impairmentCheckDefault(false, false);
         break;
       case "greatleader_minifig":
-        setSelectedValues("2", true, true, "4", "2", true, true, 5, 0);
+        setSelectedValues("1", true, true, "4", "2", true, true, 5, 0);
         power_impairmentCheckDefault(false, false);
         break;
       case "horse":
