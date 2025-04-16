@@ -24,8 +24,6 @@ BrikWars is copyright ©1995-2024 Mike Rayhawk. For more information and the com
 
 The original code is ©2015-2018 Tobias Zwick, licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-This code is ©2023-2024 Ruben Eduardo Cuevas Moreno, also licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This code is ©2023-2025 Ruben Eduardo Cuevas Moreno, also licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 ---
-
-**Enjoy the game and happy bricking!**
